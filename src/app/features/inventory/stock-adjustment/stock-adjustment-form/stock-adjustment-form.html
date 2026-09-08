@@ -1,0 +1,35 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-2 gap-4">
+    <app-form-field for="inventory" label="Inventory Batch" [required]="true" [error]="getError(f.inventory)">
+      <p-select inputId="inventory" formControlName="inventory" [options]="inventoryBatches()"
+        optionLabel="sku" optionValue="id" [filter]="true" filterBy="sku" [showClear]="true"
+        placeholder="Select a batch" class="w-full" [disabled]="mode() !== 'create'" />
+      <small class="block mt-1 text-surface-500">Cannot be changed once created.</small>
+    </app-form-field>
+
+    <app-form-field for="reason" label="Reason" [required]="true" [error]="getError(f.reason)">
+      <p-select inputId="reason" formControlName="reason" [options]="reasonOptions"
+        optionLabel="name" optionValue="value" [showClear]="true" placeholder="Select a reason" class="w-full" [disabled]="mode() !== 'create'" />
+    </app-form-field>
+  </div>
+
+  <div class="mt-4">
+    <app-form-field for="quantityDelta" label="Quantity Change" [required]="true" [error]="getError(f.quantityDelta)">
+      <input id="quantityDelta" pInputText type="number" class="w-full" formControlName="quantityDelta" [readonly]="mode() !== 'create'" />
+      <small class="block mt-1 text-surface-500">Use a negative number to reduce stock (e.g. -5), positive to add.</small>
+    </app-form-field>
+  </div>
+
+  <div class="mt-4">
+    <app-form-field for="notes" label="Notes">
+      <textarea pInputText class="w-full" formControlName="notes" [readonly]="mode() !== 'create'"></textarea>
+    </app-form-field>
+  </div>
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'" />
+    @if (mode() === 'create') {
+    <p-button raised severity="info" label="Record Adjustment" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+    }
+  </div>
+</form>

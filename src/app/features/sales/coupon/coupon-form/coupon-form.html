@@ -1,0 +1,44 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-2 gap-4">
+    <app-form-field for="promotion" label="Promotion" [required]="true" [error]="getError(f.promotion)">
+      <p-select inputId="promotion" formControlName="promotion" [options]="promotions()" optionLabel="name" optionValue="id"
+        [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a promotion" class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="code" label="Coupon Code" [required]="true" [error]="getError(f.code)">
+      <input id="code" pInputText class="w-full" formControlName="code" autocomplete="off" placeholder="e.g. SUMMER20" />
+    </app-form-field>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mt-4">
+    <app-form-field for="usageLimit" label="Total Usage Limit">
+      <input id="usageLimit" pInputText type="number" class="w-full" formControlName="usageLimit" placeholder="Leave blank for unlimited" />
+    </app-form-field>
+
+    <app-form-field for="customerLimit" label="Per-Customer Limit">
+      <input id="customerLimit" pInputText type="number" class="w-full" formControlName="customerLimit" placeholder="Leave blank for unlimited" />
+    </app-form-field>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4 mt-4">
+    <app-form-field for="start_date" label="Start Date" [required]="true" [error]="getError(f.start_date)">
+      <p-datepicker formControlName="start_date" [showIcon]="true" [showTime]="true" class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="end_date" label="End Date" [required]="true" [error]="getError(f.end_date)">
+      <p-datepicker formControlName="end_date" [showIcon]="true" [showTime]="true" class="w-full" />
+    </app-form-field>
+
+    <div class="flex flex-col items-start justify-center">
+      <label class="mb-2 text-sm font-medium">Active</label>
+      <p-toggleswitch formControlName="is_active" />
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'" />
+    @if (mode() !== 'view') {
+    <p-button raised severity="info" label="Save Coupon" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+    }
+  </div>
+</form>

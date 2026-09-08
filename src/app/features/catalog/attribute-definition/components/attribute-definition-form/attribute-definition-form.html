@@ -1,0 +1,401 @@
+<!-- <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-5">
+        <label for="group" class="block mb-2 font-medium">Group</label>
+        <p-select inputId="group" formControlName="group" [options]="attributeGroups()" optionLabel="name" optionValue="value"
+            [checkmark]="true" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Role"
+            class="w-full" />
+
+        @if (f.group.touched && f.group.invalid) {
+        <small class="block mt-1 text-red-500">
+            Unit Type is required.
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="label" class="block mb-2 font-medium">Label</label>
+        <input id="label" pInputText class="w-full" type="text" formControlName="label" styleClass="w-full"
+            autocomplete="off" inputStyleClass="w-full" [attr.aria-invalid]="f.label.touched && f.label.invalid" />
+        @if (f.label.touched && f.label.invalid) {
+        <small class="text-red-500">
+            @if (f.label.hasError('required')) { Label is required. }
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="code" class="block mb-2 font-medium">Code</label>
+        <input id="code" pInputText class="w-full" type="text" formControlName="code" styleClass="w-full"
+            autocomplete="off" inputStyleClass="w-full" [attr.aria-invalid]="f.code.touched && f.code.invalid" />
+        @if (f.code.touched && f.code.invalid) {
+        <small class="text-red-500">
+            @if (f.code.hasError('required')) { Code is required. }
+        </small>
+        }
+    </div>
+
+    <div class="mb-5">
+        <label for="attributeType" class="block mb-2 font-medium">Attribute Type</label>
+        <p-select inputId="attributeType" formControlName="attributeType" [options]="attributeTypes" optionLabel="name"
+            optionValue="value" [checkmark]="true" [filter]="true" filterBy="name" [showClear]="true"
+            placeholder="Select " class="w-full" />
+
+        @if (f.attributeType.touched && f.attributeType.invalid) {
+        <small class="block mt-1 text-red-500">
+            Attribute Type is required.
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="dataType" class="block mb-2 font-medium">Data Type</label>
+        <p-select inputId="dataType" formControlName="dataType" [options]="dataTypes" optionLabel="name"
+            optionValue="value" [checkmark]="true" [filter]="true" filterBy="name" [showClear]="true"
+            placeholder="Select " class="w-full" />
+
+        @if (f.dataType.touched && f.dataType.invalid) {
+        <small class="block mt-1 text-red-500">
+            Data Type is required.
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="unit" class="block mb-2 font-medium">Unit</label>
+        <p-select inputId="unit" formControlName="unit" [options]="units()" optionLabel="name" optionValue="value"
+            [checkmark]="true" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select "
+            class="w-full" />
+
+        @if (f.unit.touched && f.unit.invalid) {
+        <small class="block mt-1 text-red-500">
+            Unit is required.
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="filterable" class="block mb-2 font-medium">Filterable</label>
+        <p-toggleswitch formControlName="filterable" />
+    </div>
+    <div class="mb-5">
+        <label for="required" class="block mb-2 font-medium">Required</label>
+        <p-toggleswitch formControlName="required" />
+    </div>
+
+    <div class="mb-5">
+        <label for="defaultValue" class="block mb-2 font-medium">Default Value</label>
+        <input id="defaultValue" pInputText class="w-full" type="text" formControlName="defaultValue"
+            styleClass="w-full" autocomplete="off" inputStyleClass="w-full"
+            [attr.aria-invalid]="f.defaultValue.touched && f.defaultValue.invalid" />
+        @if (f.defaultValue.touched && f.defaultValue.invalid) {
+        <small class="text-red-500">
+            @if (f.defaultValue.hasError('required')) { Default Value is required. }
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="sortOrder" class="block mb-2 font-medium">Sort Order</label>
+        <input id="sortOrder" pInputText class="w-full" type="number" formControlName="sortOrder" styleClass="w-full"
+            autocomplete="off" inputStyleClass="w-full"
+            [attr.aria-invalid]="f.sortOrder.touched && f.sortOrder.invalid" />
+        @if (f.sortOrder.touched && f.sortOrder.invalid) {
+        <small class="text-red-500">
+            @if (f.sortOrder.hasError('required')) { Sort Order is required. }
+        </small>
+        }
+    </div>
+
+    <div class="flex justify-end gap-2">
+        <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'">
+        </p-button>
+        @if (mode() !== 'view') {
+        <p-button raised severity="info" label="Save" styleClass="w-full" type="submit" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()">
+        </p-button>
+        }
+    </div>
+</form> -->
+
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- Basic Information -->
+    <section class="mb-6">
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold m-0">
+                Basic Information
+            </h3>
+            <p class="text-sm text-surface-500 mt-1">
+                Define the identity of this attribute.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <!-- Label -->
+            <div>
+                <app-form-field for="label" label="Label" [required]="true" [error]="getError(f.label)">
+                    <input id="label" pInputText class="w-full" formControlName="label" autocomplete="off" />
+                </app-form-field>
+            </div>
+
+            <!-- Code -->
+            <div>
+                <app-form-field for="code" label="Code" [required]="true" [error]="getError(f.code)"
+                    hint="Unique identifier used by the system">
+                    <input id="code" pInputText class="w-full" formControlName="code" autocomplete="off" />
+                </app-form-field>
+            </div>
+
+        </div>
+
+        <!-- Group -->
+        <div class="mt-4">
+            <app-form-field for="group" label="Attribute Group" [required]="false" [error]="getError(f.group)"
+                hint="Organizes attributes into logical sections.">
+                <p-select inputId="group" formControlName="group" [options]="attributeGroups()" optionLabel="name"
+                    optionValue="id" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a group"
+                    class="w-full" />
+            </app-form-field>
+        </div>
+    </section>
+
+
+    <!-- Type & Behavior -->
+    <section class="mb-6">
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold m-0">
+                Type & Behavior
+            </h3>
+            <p class="text-sm text-surface-500 mt-1">
+                Define how this attribute is used in your catalog.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Attribute Type -->
+            <div>
+                <app-form-field for="attributeType" label="Attribute Type" [required]="true"
+                    [error]="getError(f.attributeType)">
+                    <p-select inputId="attributeType" formControlName="attributeType" [options]="attributeTypes"
+                        optionLabel="name" optionValue="value" [checkmark]="true" [showClear]="true"
+                        placeholder="Select type" class="w-full" />
+                </app-form-field>
+            </div>
+
+
+            <!-- Data Type -->
+            <div>
+                <app-form-field for="attributeType" label="Data Type" [required]="true" [error]="getError(f.dataType)"
+                    hint="Determines how values are entered and validated.">
+                    <p-select inputId="dataType" formControlName="dataType" [options]="dataTypes" optionLabel="name"
+                        optionValue="value" [checkmark]="true" [showClear]="true" placeholder="Select data type"
+                        class="w-full" />
+
+                </app-form-field>
+            </div>
+        </div>
+
+        <!-- Unit -->
+        @if (showUnit()) {
+        <div class="mt-4">
+            <app-form-field for="unit" label="Unit" [required]="false" [error]="getError(f.unit)">
+                <p-select inputId="unit" formControlName="unit" [options]="units()" optionLabel="name" optionValue="id"
+                    [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a unit" class="w-full" />
+            </app-form-field>
+        </div>
+        }
+
+    </section>
+
+
+    <!-- Configuration -->
+    <section class="mb-6">
+
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold m-0">
+                Configuration
+            </h3>
+
+            <p class="text-sm text-surface-500 mt-1">
+                Control how this attribute behaves in the product catalog.
+            </p>
+        </div>
+
+
+        <!-- Required -->
+        <div class="flex items-center justify-between
+                   rounded-lg border border-surface-200
+                   p-4 mb-3">
+            <div>
+                <div class="font-medium">
+                    Required
+                </div>
+
+                <div class="text-sm text-surface-500 mt-1">
+                    Customers must provide a value for this attribute.
+                </div>
+            </div>
+
+            <p-toggleswitch formControlName="required" />
+        </div>
+
+
+        <!-- Filterable -->
+        <div class="flex items-center justify-between
+                   rounded-lg border border-surface-200
+                   p-4 mb-4">
+            <div>
+                <div class="font-medium">
+                    Filterable
+                </div>
+
+                <div class="text-sm text-surface-500 mt-1">
+                    Allow customers to filter products using this attribute.
+                </div>
+            </div>
+
+            <p-toggleswitch formControlName="filterable" />
+        </div>
+
+        @if (showDefaultValueText()) {
+        <div class="mb-4">
+            <label for="defaultValue" class="block mb-2 font-medium">Default Value</label>
+            <input id="defaultValue" pInputText class="w-full" formControlName="defaultValue"
+                placeholder="Enter default value" autocomplete="off" />
+            <small class="block mt-1 text-surface-500">Optional value used when no value is provided.</small>
+        </div>
+        }
+        @if (showDefaultValueToggle()) {
+        <div class="flex items-center justify-between rounded-lg border border-surface-200 p-4 mb-4">
+            <div>
+                <div class="font-medium">Default Value</div>
+                <div class="text-sm text-surface-500 mt-1">Default state when no value is provided.</div>
+            </div>
+            <p-toggleswitch formControlName="defaultValue" />
+        </div>
+        }
+        @if (showDefaultValueDate()) {
+        <div class="mb-4">
+            <label for="defaultValue" class="block mb-2 font-medium">Default Value</label>
+            <p-datepicker formControlName="defaultValue" [showIcon]="true" class="w-full" />
+        </div>
+        }
+
+
+        <!-- Sort Order -->
+        <div class="md:w-1/2">
+
+            <label for="sortOrder" class="block mb-2 font-medium">
+                Display Order
+            </label>
+
+            <input id="sortOrder" pInputText class="w-full" type="number" formControlName="sortOrder" min="0" />
+
+            <small class="block mt-1 text-surface-500">
+                Controls the order in which attributes are displayed.
+            </small>
+
+        </div>
+
+    </section>
+
+    <div class="mt-4">
+        <label class="block mb-2 font-medium">Validation Rules</label>
+
+        <div class="rounded-lg border border-surface-200 p-4">
+
+            @if (f.dataType.value === 'text') {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <app-form-field for="minLength" label="Minimum Length" [required]="false"
+                        [error]="getError(f.minLength)">
+                        <input id="minLength" pInputText type="number" class="w-full" formControlName="minLength"
+                            min="0" placeholder="e.g. 3" />
+                    </app-form-field>
+                </div>
+                <div>
+                    <app-form-field for="maxLength" label="Max Length" [required]="false"
+                        [error]="getError(f.maxLength)">
+                        <input id="maxLength" pInputText type="number" class="w-full" formControlName="maxLength"
+                            min="0" placeholder="e.g. 100" />
+
+                    </app-form-field>
+                </div>
+            </div>
+            <p-panel header="Advanced" [toggleable]="true" [collapsed]="true" styleClass="mt-3">
+                <label for="pattern" class="block mb-2 text-sm">Regex Pattern</label>
+                <input id="pattern" pInputText class="w-full" formControlName="pattern"
+                    placeholder="e.g. ^[A-Za-z0-9]+$" />
+                <small class="block mt-1 text-surface-500">
+                    Optional regex the value must match. Leave blank for no pattern restriction.
+                </small>
+            </p-panel>
+
+            } @else if (f.dataType.value === 'number') {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="min" class="block mb-2 text-sm">Minimum Value</label>
+                    <input id="min" pInputText type="number" class="w-full" formControlName="min"
+                        placeholder="e.g. 0" />
+                </div>
+                <div>
+                    <label for="max" class="block mb-2 text-sm">Maximum Value</label>
+                    <input id="max" pInputText type="number" class="w-full" formControlName="max"
+                        placeholder="e.g. 100" />
+                </div>
+            </div>
+            <div class="mt-3">
+                <label for="step" class="block mb-2 text-sm">Step</label>
+                <input id="step" pInputText type="number" class="w-full" formControlName="step" min="0"
+                    placeholder="e.g. 0.5" />
+                <small class="block mt-1 text-surface-500">
+                    Increment granularity for the value (e.g. 0.5 allows 1, 1.5, 2 — not 1.2).
+                </small>
+            </div>
+
+            } @else if (f.dataType.value === 'date') {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="minDate" class="block mb-2 text-sm">Earliest Date</label>
+                    <p-datepicker formControlName="minDate" [showIcon]="true" class="w-full" />
+                </div>
+                <div>
+                    <label for="maxDate" class="block mb-2 text-sm">Latest Date</label>
+                    <p-datepicker formControlName="maxDate" [showIcon]="true" class="w-full" />
+                </div>
+            </div>
+
+            } @else if (f.dataType.value === 'select' || f.dataType.value === 'multiselect') {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="minSelections" class="block mb-2 text-sm">Minimum Selections</label>
+                    <input id="minSelections" pInputText type="number" class="w-full" formControlName="minSelections"
+                        min="0" placeholder="e.g. 1" />
+                </div>
+                <div>
+                    <label for="maxSelections" class="block mb-2 text-sm">Maximum Selections</label>
+                    <input id="maxSelections" pInputText type="number" class="w-full" formControlName="maxSelections"
+                        min="0" placeholder="e.g. 3" />
+                </div>
+            </div>
+            <small class="block mt-2 text-surface-500">
+                Options themselves are managed separately after saving this attribute.
+            </small>
+
+            } @else {
+            <p class="text-sm text-surface-500 m-0">No additional validation rules are required for this data type.</p>
+            }
+
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-2
+               pt-4 border-t border-surface-200">
+
+        <p-button severity="secondary" [label]="mode() === 'view' ? 'Close' : 'Cancel'" type="button"
+            (click)="onCancel()" />
+
+        @if (mode() !== 'view') {
+        <p-button severity="primary" label="Save Attribute" type="submit" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()" />
+        }
+
+    </div>
+</form>

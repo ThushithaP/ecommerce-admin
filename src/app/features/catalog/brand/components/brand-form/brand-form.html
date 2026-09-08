@@ -1,0 +1,34 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-5">
+        <label for="name" class="block mb-2 font-medium">Name</label>
+        <input id="name" pInputText class="w-full" type="text" formControlName="name" styleClass="w-full"
+            autocomplete="off" inputStyleClass="w-full" [attr.aria-invalid]="f.name.touched && f.name.invalid" />
+        @if (f.name.touched && f.name.invalid) {
+        <small class="text-red-500">
+            @if (f.name.hasError('required')) { Name is required. }
+            @if (f.name.hasError('minlength')) { Minimum 3 characters. }
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="slug" class="block mb-2 font-medium">Slug</label>
+        <input id="slug" pInputText class="w-full" type="text" formControlName="slug" styleClass="w-full"
+            autocomplete="off" inputStyleClass="w-full" />
+
+    </div>
+    <app-image-uploader [multiple]="false" folder="brands" [maxSizeMb]="2"
+        [initialAssets]="initialLogoAssets()" (assetIdsChange)="onLogoChange($event)" />
+    <div class="mb-5">
+        <label for="description" class="block mb-2 font-medium">Description</label>
+        <textarea pInputText class="w-full" formControlName="description" styleClass="w-full"></textarea>
+    </div>
+    <div class="flex justify-end gap-2">
+        <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'">
+        </p-button>
+        @if (mode() !== 'view') {
+        <p-button raised severity="info" label="Save" styleClass="w-full" type="submit" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()">
+        </p-button>
+        }
+    </div>
+</form>

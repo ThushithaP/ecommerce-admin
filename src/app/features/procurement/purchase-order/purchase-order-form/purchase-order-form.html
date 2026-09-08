@@ -1,0 +1,98 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <h6 class="mb-2">Purchase Order Details</h6>
+  <div class="grid grid-cols-3 gap-4">
+    <app-form-field for="supplier" label="Supplier" [required]="true" [error]="getError(f.supplier)">
+      <p-select inputId="supplier" formControlName="supplier" [options]="suppliers()" optionLabel="displayName"
+        optionValue="id" [filter]="true" filterBy="displayName" [showClear]="true" placeholder="Select a supplier"
+        class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="warehouse" label="Warehouse" [required]="true" [error]="getError(f.warehouse)">
+      <p-select inputId="warehouse" formControlName="warehouse" [options]="warehouses()" optionLabel="name"
+        optionValue="id" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a warehouse"
+        class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="status" label="Status" [required]="true" [error]="getError(f.status)">
+      <p-select inputId="status" formControlName="status" [options]="statusOptions" optionLabel="name"
+        optionValue="value" class="w-full" />
+    </app-form-field>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4 mt-4">
+    <app-form-field for="orderedAt" label="Ordered Date">
+      <p-datepicker formControlName="orderedAt" [showIcon]="true" class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="expectedDate" label="Expected Date">
+      <p-datepicker formControlName="expectedDate" [showIcon]="true" class="w-full" />
+    </app-form-field>
+  </div>
+
+  <div class="mt-4">
+    <app-form-field for="notes" label="Notes">
+      <textarea pInputText class="w-full" formControlName="notes"></textarea>
+    </app-form-field>
+  </div>
+
+  <!-- Line Items -->
+  <h6 class="mb-2 mt-6">Line Items</h6>
+  @if (itemsLocked()) {
+  <p class="text-sm text-surface-500 mb-2">
+    Items cannot be modified once receiving has started for this purchase order.
+  </p>
+  }
+
+  <div class="rounded-lg border border-surface-200">
+    @for (item of itemsArray.controls; track $index; let i = $index) {
+    <div [formGroup]="item" class="grid grid-cols-5 gap-2 items-end px-3 py-3 border-b border-surface-100">
+      <div class="col-span-2">
+        <app-form-field [for]="'variant-' + i" label="Product Variant" [required]="true"
+          [error]="getError(item.controls.variant)">
+          <p-select [inputId]="'variant-' + i" formControlName="variant" [options]="variants()"
+            optionLabel="displayLabel" optionValue="id" [filter]="true" filterBy="displayLabel" [showClear]="true"
+            placeholder="Select a variant" class="w-full" (onFilter)="onVariantFilter($event)" />
+
+        </app-form-field>
+      </div>
+
+      <app-form-field [for]="'qty-' + i" label="Quantity" [required]="true"
+        [error]="getError(item.controls.quantityOrdered)">
+        <input pInputText type="number" class="w-full" formControlName="quantityOrdered" />
+      </app-form-field>
+
+      <app-form-field [for]="'cost-' + i" label="Unit Cost" [required]="true"
+        [error]="getError(item.controls.unitCost)">
+        <input pInputText type="number" class="w-full" formControlName="unitCost" />
+      </app-form-field>
+
+      @if (mode() !== 'view') {
+      <button type="button" class="text-red-500" [disabled]="itemsLocked()" (click)="removeItem(i)">✕ Remove</button>
+      }
+
+    </div>
+    } @empty {
+    <div class="p-4 text-center text-surface-500">No line items yet.</div>
+    }
+  </div>
+  @if (mode() !== 'view') {
+  <p-button label="Add Item" icon="pi pi-plus" type="button" [disabled]="itemsLocked()" (onClick)="addItem()"
+    styleClass="mt-2" />
+
+  }
+
+  <div class="flex justify-end mt-4 text-lg font-semibold">
+    Total: {{ totalAmount() | number: '1.2-2' }}
+  </div>
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" [label]="mode() === 'view' ? 'Close' : 'Cancel'" type="button"
+      (onClick)="onCancel()" />
+    @if (mode() !== 'view') {
+    <p-button raised severity="info" label="Save Purchase Order" type="submit" [loading]="submitting()"
+      [disabled]="form.invalid || submitting()" />
+
+    }
+  </div>
+</form>

@@ -1,0 +1,11 @@
+<div class="flex h-screen flex-col">
+    <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+
+    <div class="flex flex-1 overflow-hidden">
+        <app-sidebar [sidebarCollapsed]="sidebarCollapsed" ></app-sidebar>
+
+        <main class="flex-1 overflow-auto bg-surface-50 p-4 pt-0">
+            <router-outlet />
+        </main>
+    </div>
+</div>

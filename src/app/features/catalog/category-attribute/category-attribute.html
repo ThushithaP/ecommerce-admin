@@ -1,0 +1,77 @@
+<!-- <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label class="block mb-2 font-medium">Category</label>
+  <span>{{categoryName}}</span>
+  <input type="text" [value]="categoryId" formControlName="category" [hidden]="true">
+
+  <div class="mt-4">
+    <label class="block mb-2 font-medium">Options</label>
+
+    <div class="rounded-lg border border-surface-200">
+      @for (control of optionsArray.controls; track $index; let i = $index) {
+        <div class="flex items-center gap-2 px-3 py-2 border-b border-surface-100">
+          <div class="mt-4">
+            <app-form-field  [for]="'attribute-' + i" label="Attribute Defintion" [required]="false" [error]="getError(control.controls.attribute)">
+                <p-select [inputId]="'attribute-' + i" formControlName="attribute" [options]="attributedefinitions()" optionLabel="label"
+                    optionValue="id" [filter]="true" filterBy="label" [showClear]="true" 
+                    class="w-full" />
+            </app-form-field>
+        </div>
+          <p-toggleswitch formControlName="required" />
+          <button type="button" (click)="moveUp(i)" [disabled]="i === 0">↑</button>
+          <button type="button" (click)="moveDown(i)" [disabled]="i === optionsArray.length - 1">↓</button>
+          <button type="button" (click)="removeOption(i)">✕</button>
+        </div>
+      } @empty {
+        <div class="p-4 text-center text-surface-500">No options yet. Add one below.</div>
+      }
+    </div>
+
+    <p-button label="Add Option" icon="pi pi-plus" type="button" (onClick)="addOption()" styleClass="mt-2" />
+  </div>
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" (click)="onClose()" label="Close" />
+    <p-button raised severity="info" label="Save" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+  </div>
+</form> -->
+
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label class="block mb-2 font-medium">Category</label>
+  <span>{{ categoryName }}</span>
+
+  <div class="mt-4">
+    <label class="block mb-2 font-medium">Options</label>
+
+    <div class="rounded-lg border border-surface-200">
+      @for (control of optionsArray.controls; track $index; let i = $index) {
+        <div [formGroup]="control" class="flex items-center gap-2 px-3 py-2 border-b border-surface-100">
+          <div class="flex-1">
+            <app-form-field [for]="'attribute-' + i" label="Attribute Definition" [required]="true" [error]="getError(control.controls.attribute)">
+              <p-select [inputId]="'attribute-' + i" formControlName="attribute" [options]="attributedefinitions()"
+                optionLabel="label" optionValue="id" [filter]="true" filterBy="label" [showClear]="true" class="w-full" />
+            </app-form-field>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <label class="text-sm mb-1">Required</label>
+            <p-toggleswitch formControlName="required" />
+          </div>
+
+          <button type="button" (click)="moveUp(i)" [disabled]="i === 0">↑</button>
+          <button type="button" (click)="moveDown(i)" [disabled]="i === optionsArray.length - 1">↓</button>
+          <button type="button" (click)="removeOption(i)">✕</button>
+        </div>
+      } @empty {
+        <div class="p-4 text-center text-surface-500">No attributes assigned yet. Add one below.</div>
+      }
+    </div>
+
+    <p-button label="Add Attribute" icon="pi pi-plus" type="button" (onClick)="addOption()" styleClass="mt-2" />
+  </div>
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" (click)="onClose()" label="Close" />
+    <p-button raised severity="info" label="Save" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+  </div>
+</form>

@@ -1,0 +1,87 @@
+<div class="p-6">
+  <div class="flex items-end justify-between mb-6 gap-4">
+    <h4 class="text-xl font-semibold m-0">Reports & Analytics</h4>
+
+    <div class="flex items-end gap-3">
+      <app-form-field for="startDate" label="From">
+        <p-datepicker [ngModel]="startDate()" (ngModelChange)="startDate.set($event)" [showIcon]="true" />
+      </app-form-field>
+      <app-form-field for="endDate" label="To">
+        <p-datepicker [ngModel]="endDate()" (ngModelChange)="endDate.set($event)" [showIcon]="true" />
+      </app-form-field>
+      <p-button label="Apply" (onClick)="fetchAll()" [loading]="loading()" />
+    </div>
+  </div>
+
+  <!-- Summary cards -->
+  @if (summary(); as s) {
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="rounded-2xl border border-surface-200 p-5">
+      <div class="text-sm text-surface-500">Total Revenue</div>
+      <div class="text-2xl font-semibold mt-1">{{ formatCurrency(s.totalRevenue) }}</div>
+    </div>
+    <div class="rounded-2xl border border-surface-200 p-5">
+      <div class="text-sm text-surface-500">Orders</div>
+      <div class="text-2xl font-semibold mt-1">{{ s.orderCount }}</div>
+    </div>
+    <div class="rounded-2xl border border-surface-200 p-5">
+      <div class="text-sm text-surface-500">Avg Order Value</div>
+      <div class="text-2xl font-semibold mt-1">{{ formatCurrency(s.avgOrderValue) }}</div>
+    </div>
+  </div>
+  }
+
+  <!-- Charts -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="rounded-2xl border border-surface-200 p-5">
+      <h6 class="mb-3 font-medium">Orders by Status</h6>
+      <canvas #statusChart height="220"></canvas>
+    </div>
+    <div class="rounded-2xl border border-surface-200 p-5">
+      <h6 class="mb-3 font-medium">Revenue by Category</h6>
+      <canvas #categoryChart height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- Payment methods -->
+  @if (paymentMethods().length) {
+  <div class="rounded-2xl border border-surface-200 p-5 mb-8">
+    <h6 class="mb-3 font-medium">Payment Methods</h6>
+    <div class="flex gap-8">
+      @for (pm of paymentMethods(); track pm.method) {
+        <div>
+          <div class="text-sm text-surface-500">{{ pm.method }}</div>
+          <div class="text-lg font-semibold">{{ formatCurrency(pm.total) }}</div>
+          <div class="text-xs text-surface-400">{{ pm.count }} payments</div>
+        </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Top products -->
+  <div class="mb-8">
+    <h6 class="mb-3 font-medium">Top Selling Products</h6>
+    <app-data-table [columns]="topProductColumns" [data]="topProducts()" [loading]="loading()" [totalCount]="topProducts().length" [pageSize]="10" [pageIndex]="0" />
+  </div>
+
+  <!-- Inventory valuation -->
+  @if (valuation(); as v) {
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    <div class="rounded-2xl border border-surface-200 p-5">
+      <div class="text-sm text-surface-500">Total Stock Units</div>
+      <div class="text-2xl font-semibold mt-1">{{ v.totalUnits }}</div>
+    </div>
+    <div class="rounded-2xl border border-surface-200 p-5">
+      <div class="text-sm text-surface-500">Total Cost Value</div>
+      <div class="text-2xl font-semibold mt-1">{{ formatCurrency(v.totalCostValue) }}</div>
+    </div>
+  </div>
+  }
+
+  <!-- Low stock -->
+  <div>
+    <h6 class="mb-3 font-medium">Low Stock Alerts</h6>
+    <app-data-table [columns]="lowStockColumns" [data]="lowStock()" [loading]="loading()" [totalCount]="lowStock().length" [pageSize]="10" [pageIndex]="0" />
+  </div>
+</div>

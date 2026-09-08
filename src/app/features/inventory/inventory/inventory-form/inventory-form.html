@@ -1,0 +1,103 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid grid-cols-3 gap-4">
+        <app-form-field for="warehouse" label="Warehouse" [required]="true" [error]="getError(f.warehouse)">
+            <p-select inputId="warehouse" formControlName="warehouse" [options]="warehouses()" optionLabel="name"
+                optionValue="id" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a warehouse"
+                class="w-full" (onFilter)="onWarehouseFilter($event)"/>
+        </app-form-field>
+
+        <app-form-field for="supplier" label="Supplier" [required]="false" [error]="getError(f.supplier)">
+            <p-select inputId="supplier" formControlName="supplier" [options]="suppliers()" optionLabel="displayName"
+                optionValue="id" [filter]="true" filterBy="displayName" [showClear]="true"
+                placeholder="Select a supplier" class="w-full" (onFilter)="onSupplierFilter($event)"/>
+        </app-form-field>
+    </div>
+
+    <div class="rounded-lg border border-surface-200">
+        @for (item of itemsArray.controls; track $index; let i = $index) {
+        <div [formGroup]="item" class="grid grid-cols-1 gap-4 border-b border-surface-200 px-4 py-4 md:grid-cols-12">
+            <div class="md:col-span-4">
+                <app-form-field [for]="'variant-' + i" label="Product Variant" [required]="true"
+                    [error]="getError(item.controls.variant)">
+                    <p-select [inputId]="'variant-' + i" formControlName="variant" [options]="variants()"
+                        optionLabel="displayLabel" optionValue="id" [filter]="true" filterBy="displayLabel"
+                        [showClear]="true" placeholder="Select a variant" class="w-full"
+                        (onFilter)="onVariantFilter($event)" />
+                </app-form-field>
+            </div>
+
+            <div class="md:col-span-1">
+                <app-form-field [for]="'qty-' + i" label="Quantity" [required]="true"
+                    [error]="getError(item.controls.quantity)">
+                    <input pInputText type="number" class="w-full" formControlName="quantity" />
+                </app-form-field>
+            </div>
+
+            <div class="md:col-span-2">
+                <app-form-field [for]="'batch-' + i" label="Batch No" [required]="false"
+                    [error]="getError(item.controls.batchNo)">
+                    <input pInputText type="text" class="w-full" formControlName="batchNo" />
+                </app-form-field>
+            </div>
+
+            <div class="md:col-span-2">
+                <app-form-field [for]="'cost-' + i" label="Unit Cost" [required]="true"
+                    [error]="getError(item.controls.costPrice)">
+                    <input pInputText type="number" class="w-full" formControlName="costPrice" />
+                </app-form-field>
+            </div>
+
+            <div class="md:col-span-2">
+                <app-form-field [for]="'sell-' + i" label="Selling Price" [required]="true"
+                    [error]="getError(item.controls.sellingPrice)">
+                    <input pInputText type="number" class="w-full" formControlName="sellingPrice" />
+                </app-form-field>
+            </div>
+
+            <div class="md:col-span-2">
+                <app-form-field [for]="'mfgDate-' + i" label="Mfg Date" [required]="false"
+                    [error]="getError(item.controls.manufacturedDate)">
+                    <p-datepicker [inputId]="'mfgDate-' + i" formControlName="manufacturedDate" [showIcon]="true"
+                        class="w-full" />
+                </app-form-field>
+            </div>
+
+            <div class="md:col-span-2">
+                <app-form-field [for]="'expDate-' + i" label="Expiry Date" [required]="false"
+                    [error]="getError(item.controls.expiryDate)">
+                    <p-datepicker [inputId]="'expDate-' + i" formControlName="expiryDate" [showIcon]="true"
+                        class="w-full" />
+                </app-form-field>
+            </div>
+
+            <!-- Remove -->
+            @if (mode() !== 'view') {
+            <div class="flex items-center md:col-span-1">
+                <button type="button"
+                    class="inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-700"
+                    (click)="removeItem(i)">
+                    <i class="pi pi-trash mr-2"></i>
+                    Remove
+                </button>
+            </div>
+            }
+        </div>
+        }
+        @empty {
+        <div class="p-4 text-center text-surface-500">No line items yet.</div>
+        }
+    </div>
+    @if (mode() !== 'view') {
+    <p-button label="Add Item" icon="pi pi-plus" type="button" (onClick)="addItem()" styleClass="mt-2" />
+    }
+
+    <div class="flex justify-end gap-2 mt-6">
+        <p-button severity="secondary" [label]="mode() === 'view' ? 'Close' : 'Cancel'" type="button"
+            (onClick)="onCancel()" />
+        @if (!isViewMode()) {
+        <p-button raised severity="info" label="Save" type="submit" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()" />
+        }
+    </div>
+
+</form>

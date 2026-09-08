@@ -1,0 +1,122 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <p-card header="Category Path">
+        @if(!isViewMode()){
+        <div class="flex gap-3 items-end">
+            <div class="flex-1">
+                <label class="block mb-2 font-medium">
+                    Category
+                </label>
+                <p-select [(ngModel)]="selectedCategoryId" [options]="categories()" optionLabel="name" optionValue="id" [ngModelOptions]="{standalone:true}"
+                    placeholder="Select Category" class="w-full">
+                </p-select>
+            </div>
+
+            <p-button label="Add" icon="pi pi-plus" (onClick)="addCategory()" [disabled]="isViewMode()"></p-button>
+
+        </div>
+        }
+
+        <div class="mt-6">
+
+            <p-table [value]="selectedCategories()" [tableStyle]="{'min-width':'40rem'}">
+
+                <ng-template pTemplate="header">
+
+                    <tr>
+                        <th style="width:80px">Order</th>
+                        <th>Category</th>
+                        @if(!isViewMode()){<th style="width:220px">Actions</th>}
+                    </tr>
+
+                </ng-template>
+
+                <ng-template pTemplate="body" let-category let-rowIndex="rowIndex">
+
+                    <tr>
+
+                        <td>
+                            {{ rowIndex + 1 }}
+                        </td>
+
+                        <td>
+                            {{ category.name }}
+                        </td>
+
+                        @if(!isViewMode()){<td>
+
+                            <div class="flex gap-2">
+
+                                <p-button icon="pi pi-arrow-up" severity="secondary" [text]="true"
+                                    (onClick)="moveUp(rowIndex)" [disabled]="rowIndex === 0">
+                                </p-button>
+
+                                <p-button icon="pi pi-arrow-down" severity="secondary" [text]="true"
+                                    (onClick)="moveDown(rowIndex)"
+                                    [disabled]="rowIndex === selectedCategories().length - 1">
+                                </p-button>
+
+                                <p-button icon="pi pi-trash" severity="danger" [text]="true"
+                                    (onClick)="remove(rowIndex)">
+                                </p-button>
+
+                            </div>
+
+                        </td>}
+
+                    </tr>
+
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+
+                    <tr>
+
+                        <td colspan="3" class="text-center py-6">
+                            No categories selected.
+                        </td>
+
+                    </tr>
+
+                </ng-template>
+
+            </p-table>
+            @if (f.category_ids.touched && f.category_ids.invalid) {
+            <small class="text-red-500">
+                @if (f.category_ids.hasError('required')) {
+                At least one category is required.
+                }
+            </small>
+            }
+
+        </div>
+
+        <div class="mt-6 p-4 rounded bg-gray-100">
+
+            <div class="font-semibold mb-2">
+                Generated Path
+            </div>
+
+            <code>
+            @if (selectedCategories().length) {
+                {{ selectedCategories().map(c => c.name).join(' > ') }}
+            } @else {
+                <span class="text-surface-500">
+                    No path generated.
+                </span>
+            }
+            </code>
+
+        </div>
+
+        <div class="flex justify-end gap-2 mt-2">
+            <p-button severity="secondary" (click)="cancel.emit()" [label]="mode() === 'view' ? 'Close' : 'Cancel'">
+            </p-button>
+            @if (mode() !== 'view') {
+            <p-button raised severity="info" label="Save" styleClass="w-full" type="submit" [loading]="submitting()"
+                [disabled]="form.invalid || submitting()">
+            </p-button>
+            }
+        </div>
+
+    </p-card>
+</form>

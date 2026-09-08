@@ -1,0 +1,67 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="grid grid-cols-2 gap-4">
+    <app-form-field for="from_warehouse" label="From Warehouse" [required]="true" [error]="getError(f.from_warehouse)">
+      <p-select inputId="from_warehouse" formControlName="from_warehouse" [options]="warehouses()"
+        optionLabel="name" optionValue="id" [filter]="true" filterBy="name" [showClear]="true"
+        placeholder="Select source warehouse" class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="to_warehouse" label="To Warehouse" [required]="true" [error]="getError(f.to_warehouse)">
+      <p-select inputId="to_warehouse" formControlName="to_warehouse" [options]="warehouses()"
+        optionLabel="name" optionValue="id" [filter]="true" filterBy="name" [showClear]="true"
+        placeholder="Select destination warehouse" class="w-full" />
+    </app-form-field>
+  </div>
+
+  <div class="mt-4">
+    <app-form-field for="notes" label="Notes">
+      <textarea pInputText class="w-full" formControlName="notes"></textarea>
+    </app-form-field>
+  </div>
+
+  <h6 class="mb-2 mt-6">Items to Transfer</h6>
+  <div class="rounded-lg border border-surface-200">
+    @for (item of itemsArray.controls; track $index; let i = $index) {
+      <div [formGroup]="item" class="grid grid-cols-4 gap-2 items-end px-3 py-3 border-b border-surface-100">
+        <div class="col-span-2">
+          <app-form-field [for]="'variant-' + i" label="Product Variant" [required]="true" [error]="getError(item.controls.variant)">
+            <p-select [inputId]="'variant-' + i" formControlName="variant" [options]="variants()"
+              optionLabel="displayLabel" optionValue="id" [filter]="true" filterBy="displayLabel" [showClear]="true"
+              placeholder="Select a variant" class="w-full" />
+          </app-form-field>
+        </div>
+
+        <app-form-field [for]="'quantity-' + i" label="Quantity" [required]="true" [error]="getError(item.controls.quantity)">
+          <input pInputText type="number" class="w-full" formControlName="quantity" />
+        </app-form-field>
+
+        <div class="flex gap-2 items-end">
+          <app-form-field [for]="'batchNo-' + i" label="Batch No">
+            <input pInputText class="w-full" formControlName="batchNo" />
+          </app-form-field>
+          <button type="button" class="text-red-500 pb-2" (click)="removeItem(i)">✕</button>
+        </div>
+      </div>
+    } @empty {
+      <div class="p-4 text-center text-surface-500">No items added yet.</div>
+    }
+  </div>
+
+  @if (mode() === 'create') {
+  <p-button label="Add Item" icon="pi pi-plus" type="button" (onClick)="addItem()" styleClass="mt-2" />
+  }
+
+  @if (mode() === 'view') {
+  <div class="mt-4">
+    <span class="text-sm text-surface-500">Status:</span>
+    <span class="ml-1 font-medium">{{ record()?.status }}</span>
+  </div>
+  }
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'" />
+    @if (mode() === 'create') {
+    <p-button raised severity="info" label="Create Transfer" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+    }
+  </div>
+</form>

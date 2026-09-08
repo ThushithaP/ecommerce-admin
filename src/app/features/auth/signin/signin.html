@@ -1,0 +1,99 @@
+<div class="min-h-screen bg-(--color-bg) flex">
+    <app-auth-banner></app-auth-banner>
+
+    <div class="flex-1 flex items-center justify-center px-6 py-12">
+        <div class="w-full max-w-md bg-(--color-surface) rounded-2xl shadow-lg border border-(--color-border) p-10">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-(--color-fg)"> Welcome Back</h2>
+                <p class="mt-2 text-(--color-fg-muted)">Sign in to continue your learning journey.</p>
+            </div>
+
+            <form [formGroup]="signinForm" (ngSubmit)="submit()">
+                <div class="mb-5">
+                    <label for="email" class="block mb-2 font-medium">Email</label>
+
+                    <p-iconfield>
+                        <input id="email" pInputText class="w-full" type="email"
+                            formControlName="email" [attr.aria-invalid]="f.email.touched && f.email.invalid" autocomplete="off" />
+                    </p-iconfield>
+                    @if (f.email.touched && f.email.invalid) {
+                    <small class="text-red-500">
+                        @if (f.email.hasError('required')) { Email is required. }
+                        @if (f.email.hasError('email')) { Invalid email address. }
+                    </small>
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="block mb-2 font-medium">Password</label>
+                    <p-password id="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full"
+                         formControlName="password" [feedback]="true" >
+                    </p-password>
+                    @if (f.password.touched && f.password.invalid) {
+                    <small class="text-red-500">
+                        @if (f.password.hasError('required')) { Password is required. }
+                    </small>
+                    }
+                </div>
+
+                <div class="flex justify-between items-center mb-8">
+                    <div class="flex items-center gap-2">
+                        <p-checkbox binary="true"></p-checkbox>
+                        <span class="text-sm">
+                            Remember me
+                        </span>
+                    </div>
+
+                    <a class="text-sm text-(--color-primary) hover:underline cursor-pointer">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <p-button label="Sign In" styleClass="w-full" type="submit" [loading]="submitting()" [disabled]="signinForm.invalid || submitting()">
+                </p-button>
+            </form>
+
+            <!-- Divider -->
+
+            <!-- <div class="my-8">
+
+                <p-divider align="center">
+
+                    <span class="text-sm text-gray-500">
+                        OR
+                    </span>
+
+                </p-divider>
+
+            </div> -->
+
+            <!-- Google -->
+
+            <!-- <button
+                class="w-full border border-(--color-border) rounded-xl h-12 flex items-center justify-center gap-3 hover:bg-gray-50 transition">
+
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5">
+
+                Continue with Google
+
+            </button> -->
+
+            <!-- Footer -->
+
+            <!-- <div class="mt-8 text-center text-sm text-(--color-fg-muted)">
+
+                Don't have an account?
+
+                <a class="text-(--color-primary) font-semibold cursor-pointer hover:underline" routerLink="/signup">
+
+                    Create Account
+
+                </a>
+
+            </div> -->
+
+        </div>
+
+    </div>
+
+</div>

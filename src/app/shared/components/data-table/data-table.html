@@ -1,0 +1,147 @@
+<div class="data-table-wrapper">
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          @if(selectable){
+          <th class="checkbox-col">
+            <input type="checkbox" [checked]="isAllSelected()"
+              (change)="toggleSelectAll($any($event.target).checked)" />
+          </th>
+          }
+          @for(col of columns; track col.key){
+          <th [style.width]="col.width" [class.sortable]="col.sortable" [class.align-center]="col.align === 'center'"
+            [class.align-right]="col.align === 'right'" (click)="onSort(col)">
+            {{ col.label }}
+            @if(col.sortable){
+            <span class="sort-icon">
+              <ng-container>
+                @switch (sortColumn === col.key ? sortDirection : '') {
+                @case ('asc') {
+                <span>▲</span>
+                }
+                @case ('desc') {
+                <span>▼</span>
+                }
+                @default {
+                <span>⇅</span>
+                }
+                }
+              </ng-container>
+            </span>
+            }
+          </th>
+          }
+          @if (actions.length) {
+          <th class="actions-col">Actions</th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (!loading && data.length) {
+        <ng-container>
+          @for (row of data; track $index) {
+          <tr (click)="rowClick.emit(row)">
+            @if (selectable) {
+            <td (click)="$event.stopPropagation()">
+              <input type="checkbox" [checked]="selectedIds.has(row.id)"
+                (change)="toggleSelectRow(row.id, $any($event.target).checked)" />
+            </td>
+            }
+            @for (col of columns; track col.key) {
+            <td [class.align-center]="col.align === 'center'" [class.align-right]="col.align === 'right'">
+              @if (col.type !== 'badge' && col.type !== 'boolean' && col.type !== 'image') {
+              <span>
+                {{ getCellValue(row, col) }}
+              </span>
+              }
+              @if (col.type === 'badge') {
+              <span class="badge" [ngClass]="badgeClass(col, getCellValue(row, col))">
+                {{ getCellValue(row, col) }}
+              </span>
+              }
+              @if (col.type === 'boolean') {
+              <span class="badge" [ngClass]="getCellValue(row, col) ? 'badge-success' : 'badge-muted'">
+                {{ getCellValue(row, col) ? 'Active' : 'Inactive' }}
+              </span>
+              }
+              @if (col.type === 'image') {
+                @let imageUrl = col.imageUrl?.(getCellValue(row, col), row);
+
+                @if (imageUrl) {
+                  <img [src]="imageUrl" [alt]="col.imageAlt?.(row) ?? col.label" class="product-image" />
+                } @else {
+                  <div class="product-image-placeholder">
+                    No image
+                  </div>
+                }
+              }
+            </td>
+            }
+            @if (actions.length > 0) {
+            <td class="actions-col" (click)="$event.stopPropagation()">
+              @for (action of getVisibleActions(row); track $index) {
+              <button type="button" class="action-btn" [ngClass]="'action-' + (action.color || 'default')"
+                [pTooltip]="action.tooltip" tooltipPosition="bottom" tooltipStyleClass="table-action-tooltip"
+                (click)="action.handler(row)">
+                @if (action.icon) {
+                <i [ngClass]="action.icon"></i>
+                }
+                @if (action.label) {
+                <span>{{ action.label }}</span>
+                }
+              </button>
+              }
+            </td>
+            }
+          </tr>
+          }
+        </ng-container>
+        }
+
+        @if (loading) {
+        <tr>
+          <td [attr.colspan]="columns.length + (selectable ? 1 : 0) + (actions.length ? 1 : 0)" class="state-cell">
+            Loading...
+          </td>
+        </tr>
+        }
+        @if (!loading && !data.length) {
+        <tr>
+          <td [attr.colspan]="columns.length + (selectable ? 1 : 0) + (actions.length ? 1 : 0)" class="state-cell">
+            {{ emptyMessage }}
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalCount > 0) {
+  <div class="table-footer">
+    <div class="footer-info">
+      Showing {{ startRow }}–{{ endRow }} of {{ totalCount }}
+    </div>
+
+    <div class="footer-controls">
+      <select (change)="onPageSizeChange(+$any($event.target).value)">
+        <option [selected]="pageSize === 5" value="5">5</option>
+        <option [selected]="pageSize === 10" value="10">10</option>
+        <option [selected]="pageSize === 20" value="20">20</option>
+        <option [selected]="pageSize === 50" value="50">50</option>
+        <option [selected]="pageSize === 100" value="100">100</option>
+      </select>
+
+      <button (click)="onPageChange(pageIndex - 1)" [disabled]="pageIndex === 0">Prev</button>
+      @for (p of visiblePageNumbers; track $index) {
+      <button (click)="onPageChange(p)" [class.active]="p === pageIndex">
+        {{ p + 1 }}
+      </button>
+      }
+
+      <button (click)="onPageChange(pageIndex + 1)" [disabled]="pageIndex >= totalPages - 1">Next</button>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,61 @@
+<div class="uploader">
+  @if(mode !=='view'){
+  <div class="dropzone" [class.dragging]="isDragging()" [class.disabled]="disabled" (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()" (drop)="onDrop($event)" (click)="!disabled && fileInput.click()"
+    *ngIf="multiple || items().length === 0">
+    <input #fileInput type="file" [accept]="accept" [multiple]="multiple" [disabled]="disabled"
+      (change)="onFileInputChange($event)" hidden />
+    <i class="pi pi-cloud-upload"></i>
+    <p>Drag & drop {{ multiple ? 'images' : 'an image' }} here, or click to browse</p>
+    <small *ngIf="multiple">{{ uploadedCount }} / {{ maxFiles }} uploaded</small>
+  </div>
+  }
+
+  <div class="preview-grid" [class.single]="!multiple">
+    <div *ngFor="let item of items(); let i = index" class="preview-item">
+      <img [src]="item.serverUrl || item.previewUrl" [alt]="'image-' + i" />
+
+      <div class="overlay" *ngIf="item.status === 'uploading'">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="item.progress"></div>
+        </div>
+        <span>{{ item.progress }}%</span>
+      </div>
+
+      <div class="overlay error" *ngIf="item.status === 'failed'">
+        <span>{{ item.error }}</span>
+        <button type="button" (click)="retry(item.localId)">Retry</button>
+      </div>
+
+      <div class="badge primary" *ngIf="multiple && item.isPrimary && item.status === 'uploaded'">
+        Primary
+      </div>
+
+      @if(mode !=='view'){
+      <div class="actions" *ngIf="!disabled">
+        <button type="button" *ngIf="multiple && !item.isPrimary && item.status === 'uploaded'"
+          (click)="setPrimary(item.localId)" title="Set as primary">
+          <i class="pi pi-star"></i>
+        </button>
+        <button type="button" *ngIf="multiple" (click)="moveUp(i)" [disabled]="i === 0" title="Move left">
+          <i class="pi pi-arrow-left"></i>
+        </button>
+        <button type="button" *ngIf="multiple" (click)="moveDown(i)" [disabled]="i === items().length - 1"
+          title="Move right">
+          <i class="pi pi-arrow-right"></i>
+        </button>
+        <button type="button" (click)="remove(item.localId)" title="Remove">
+          <i class="pi pi-trash"></i>
+        </button>
+      </div>
+      }
+    </div>
+
+    <div class="dropzone small" *ngIf="!multiple && items().length > 0 && !disabled" (click)="fileInput.click()">
+      <input #fileInput type="file" [accept]="accept" [disabled]="disabled" (change)="onFileInputChange($event)"
+        hidden />
+      <i class="pi pi-refresh"></i>
+      <span>Replace</span>
+    </div>
+  </div>
+</div>

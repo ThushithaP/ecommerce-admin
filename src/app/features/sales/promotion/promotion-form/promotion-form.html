@@ -1,0 +1,128 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <h6 class="mb-2">Promotion Details</h6>
+  <div class="grid grid-cols-3 gap-4">
+    <app-form-field for="name" label="Name" [required]="true" [error]="getError(f.name)">
+      <input id="name" pInputText class="w-full" formControlName="name" autocomplete="off" />
+    </app-form-field>
+
+    <app-form-field for="type" label="Type" [required]="true" [error]="getError(f.type)">
+      <p-select inputId="type" formControlName="type" [options]="typeOptions" optionLabel="name" optionValue="value"
+        [showClear]="true" placeholder="Select type" class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="priority" label="Priority">
+      <input id="priority" pInputText type="number" class="w-full" formControlName="priority" />
+      <small class="block mt-1 text-surface-500">Higher priority is evaluated first.</small>
+    </app-form-field>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4 mt-4">
+    <app-form-field for="start_date" label="Start Date" [required]="true" [error]="getError(f.start_date)">
+      <p-datepicker formControlName="start_date" [showIcon]="true" [showTime]="true" class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="end_date" label="End Date" [required]="true" [error]="getError(f.end_date)">
+      <p-datepicker formControlName="end_date" [showIcon]="true" [showTime]="true" class="w-full" />
+    </app-form-field>
+
+    <div class="flex flex-col items-start justify-center">
+      <label class="mb-2 text-sm font-medium">Active</label>
+      <p-toggleswitch formControlName="is_active" />
+    </div>
+  </div>
+
+  <!-- Rules -->
+  <h6 class="mb-2 mt-6">Rules <span class="text-sm font-normal text-surface-500">(what triggers this promotion — leave all blank to apply to everything)</span></h6>
+  <div class="rounded-lg border border-surface-200">
+    @for (rule of rulesArray.controls; track $index; let i = $index) {
+      <div [formGroup]="rule" class="grid grid-cols-6 gap-2 items-end px-3 py-3 border-b border-surface-100">
+        <app-form-field [for]="'ruleCategory-' + i" label="Category">
+          <p-select [inputId]="'ruleCategory-' + i" formControlName="category" [options]="categories()"
+            optionLabel="name" optionValue="id" [filter]="true" filterBy="name" [showClear]="true" class="w-full" />
+        </app-form-field>
+
+        <app-form-field [for]="'ruleBrand-' + i" label="Brand">
+          <p-select [inputId]="'ruleBrand-' + i" formControlName="brand" [options]="brands()"
+            optionLabel="name" optionValue="id" [filter]="true" filterBy="name" [showClear]="true" class="w-full" />
+        </app-form-field>
+
+        <app-form-field [for]="'ruleProduct-' + i" label="Product">
+          <p-select [inputId]="'ruleProduct-' + i" formControlName="product" [options]="products()"
+            optionLabel="name" optionValue="id" [filter]="true" filterBy="name" [showClear]="true" class="w-full" />
+        </app-form-field>
+
+        <app-form-field [for]="'ruleVariant-' + i" label="Variant">
+          <p-select [inputId]="'ruleVariant-' + i" formControlName="variant" [options]="variants()"
+            optionLabel="displayLabel" optionValue="id" [filter]="true" filterBy="displayLabel" [showClear]="true" class="w-full" />
+        </app-form-field>
+
+        <app-form-field [for]="'ruleMinQty-' + i" label="Min Qty">
+          <input pInputText type="number" class="w-full" formControlName="minimumQty" />
+        </app-form-field>
+
+        <div class="flex gap-2 items-end">
+          <app-form-field [for]="'ruleMinAmount-' + i" label="Min Amount">
+            <input pInputText type="number" class="w-full" formControlName="minimumAmount" />
+          </app-form-field>
+          <button type="button" class="text-red-500 pb-2" (click)="removeRule(i)">✕</button>
+        </div>
+      </div>
+    } @empty {
+      <div class="p-4 text-center text-surface-500">No rules — applies to entire cart.</div>
+    }
+  </div>
+  <p-button label="Add Rule" icon="pi pi-plus" type="button" (onClick)="addRule()" styleClass="mt-2" />
+
+  <!-- Rewards -->
+  <h6 class="mb-2 mt-6">Rewards <span class="text-sm font-normal text-surface-500">(what the customer gets)</span></h6>
+  <div class="rounded-lg border border-surface-200">
+    @for (reward of rewardsArray.controls; track $index; let i = $index) {
+      <div [formGroup]="reward" class="grid grid-cols-6 gap-2 items-end px-3 py-3 border-b border-surface-100">
+        <app-form-field [for]="'rewardType-' + i" label="Reward Type" [required]="true">
+          <p-select [inputId]="'rewardType-' + i" formControlName="rewardType" [options]="rewardTypeOptions"
+            optionLabel="name" optionValue="value" class="w-full" />
+        </app-form-field>
+
+        @if (reward.controls.rewardType.value === 'discount') {
+          <app-form-field [for]="'discountType-' + i" label="Discount Type">
+            <p-select [inputId]="'discountType-' + i" formControlName="discountType" [options]="discountTypeOptions"
+              optionLabel="name" optionValue="value" class="w-full" />
+          </app-form-field>
+
+          <app-form-field [for]="'discountValue-' + i" label="Discount Value">
+            <input pInputText type="number" class="w-full" formControlName="discountValue" />
+          </app-form-field>
+        }
+
+        @if (reward.controls.rewardType.value === 'free_product') {
+          <app-form-field [for]="'freeProduct-' + i" label="Free Product">
+            <p-select [inputId]="'freeProduct-' + i" formControlName="freeProduct" [options]="products()"
+              optionLabel="name" optionValue="id" [filter]="true" filterBy="name" [showClear]="true" class="w-full" />
+          </app-form-field>
+
+          <app-form-field [for]="'freeVariant-' + i" label="Free Variant">
+            <p-select [inputId]="'freeVariant-' + i" formControlName="freeVariant" [options]="variants()"
+              optionLabel="displayLabel" optionValue="id" [filter]="true" filterBy="displayLabel" [showClear]="true" class="w-full" />
+          </app-form-field>
+
+          <app-form-field [for]="'freeQty-' + i" label="Free Qty">
+            <input pInputText type="number" class="w-full" formControlName="freeQty" />
+          </app-form-field>
+        }
+
+        <button type="button" class="text-red-500 pb-2" (click)="removeReward(i)">✕</button>
+      </div>
+    } @empty {
+      <div class="p-4 text-center text-surface-500">No rewards added yet.</div>
+    }
+  </div>
+  <p-button label="Add Reward" icon="pi pi-plus" type="button" (onClick)="addReward()" styleClass="mt-2" />
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'" />
+    @if (mode() !== 'view') {
+    <p-button raised severity="info" label="Save Promotion" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+    }
+  </div>
+</form>

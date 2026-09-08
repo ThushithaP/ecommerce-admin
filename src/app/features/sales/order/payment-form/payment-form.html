@@ -1,0 +1,116 @@
+<div class="space-y-3">
+    <div>
+        <p class="text-sm text-ink/50">
+            Enter the transaction reference and confirm each payment.
+        </p>
+    </div>
+
+    @if (selectedPayments(); as payments) {
+    @if (payments.length) {
+    <div class="space-y-3">
+        @for (payment of payments; track payment.id) {
+        <div class="rounded-2xl border border-ink/10 px-5 py-4">
+            <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-6">
+                <!-- Payment details -->
+                <div class="min-w-0">
+                    <div class="flex items-center gap-3">
+                        <p class="font-medium text-ink">
+                            {{ payment.method | titlecase}}
+                        </p>
+
+                        <span class="rounded-full px-2.5 py-1 text-xs font-medium" [ngClass]="{
+                      'bg-green-100 text-green-700':
+                        payment.status === 'completed',
+
+                      'bg-yellow-100 text-yellow-700':
+                        payment.status === 'pending',
+
+                      'bg-red-100 text-red-700':
+                        payment.status === 'failed',
+
+                      'bg-ink/10 text-ink/60':
+                        !['completed', 'pending', 'failed'].includes(
+                          payment.status
+                        )
+                    }">
+                            {{ payment.status | titlecase }}
+                        </span>
+                    </div>
+
+                    <p class="mt-2 text-sm text-ink/60">
+                        {{ payment.currency }}
+                        {{ payment.amount }}
+                    </p>
+
+                    @if (payment.paid_at) {
+                    <p class="mt-1 text-xs text-ink/50">
+                        Paid:
+                        {{ payment.paid_at | date: 'medium' }}
+                    </p>
+                    }
+                </div>
+
+                <!-- Amount -->
+                <div class="whitespace-nowrap text-right">
+                    <span class="font-medium text-ink">
+                        {{ payment.currency }}
+                        {{ payment.amount }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Transaction reference + confirm -->
+            @if (payment.status !== 'completed') {
+            <div class="mt-4 flex items-end gap-3 border-t border-ink/10 pt-4">
+                <div class="flex-1">
+                    <label [for]="'transaction-reference-' + payment.id"
+                        class="mb-1.5 block text-sm font-medium text-ink">
+                        Transaction Reference
+                    </label>
+
+                    <input pInputText [id]="'transaction-reference-' + payment.id" type="text" autocomplete="off"
+                        [formControl]="getTransactionControl(payment.id)" placeholder="Enter transaction reference"
+                        class="w-full" />
+                </div>
+
+                <button type="button" [id]="'confirm-' + payment.id"
+                    class="shrink-0 rounded-xl bg-green-500 px-5 py-2.5 text-sm font-medium  transition hover:opacity-90"
+                    (click)="onConfirmPayment(payment)">
+                    @if (getSubmitStatus(payment.id)) {
+                    Confirming...
+                    } @else {
+                    Confirm
+                    }
+                </button>
+            </div>
+            } @else {
+            <div class="mt-4 flex items-center justify-between border-t border-ink/10 pt-4">
+                <span class="text-sm text-ink/50">
+                    Transaction Reference
+                </span>
+
+                <span class="text-sm font-medium text-ink">
+                    {{ payment.transactionReference || '—' }}
+                </span>
+
+                <span class="rounded-xl bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+                    Confirmed
+                </span>
+            </div>
+            }
+        </div>
+        }
+    </div>
+    } @else {
+    <div class="rounded-2xl border border-ink/10 px-5 py-6 text-center">
+        <p class="text-sm text-ink/50">
+            No payments available.
+        </p>
+    </div>
+    }
+    }
+</div>
+<div class="flex justify-end gap-2 mt-2">
+    <p-button severity="secondary" (click)="onClose()" label="Close">
+    </p-button>
+</div>

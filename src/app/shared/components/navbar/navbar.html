@@ -1,0 +1,61 @@
+<header class="app-navbar sticky top-0 z-50">
+    <div class="flex h-full items-center px-5">
+
+        <p-button icon="pi pi-bars" [text]="true" [rounded]="true" (click)="onToggleSidebar()">
+        </p-button>
+
+        <div class="ml-3 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl"
+                style="background:var(--color-primary);color:var(--color-primary-fg);">
+
+                <i class="pi pi-graduation-cap"></i>
+
+            </div>
+
+            <span class="text-lg font-semibold">
+                ABC Fashion
+            </span>
+        </div>
+
+        <div class="mx-8 flex-1">
+            <input pInputText placeholder="Search..." class="app-search w-full px-11 py-2" />
+        </div>
+
+        <div class="flex items-center gap-2">
+
+            <p-button icon="pi pi-bell" [text]="true" [rounded]="true">
+            </p-button>
+
+            <p-button icon="pi pi-moon" [text]="true" [rounded]="true">
+            </p-button>
+
+            <p-button [text]="true" [rounded]="true" (click)="userMenu.toggle($event)">
+
+                <div class="flex items-center gap-2">
+                    <!-- <p-avatar image="/avatar.jpg" shape="circle">
+                    </p-avatar> -->
+
+                    @if (currentUser(); as user) {
+                    <div class="hidden md:flex flex-col items-start leading-tight">
+                        <!-- <span class="font-medium">
+                            {{ user.name || 'Super User' }}
+                        </span>
+
+                        <small class="text-color-secondary">
+                            {{ user.role.name || 'Super User' }}
+                        </small> -->
+                    </div>
+                    }
+
+                    <i class="pi pi-angle-down"></i>
+                </div>
+
+            </p-button>
+
+            <p-menu #userMenu [popup]="true" [model]="userMenuItems">
+            </p-menu>
+
+        </div>
+
+    </div>
+</header>

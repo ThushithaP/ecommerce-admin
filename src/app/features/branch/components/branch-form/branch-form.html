@@ -1,0 +1,63 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+            <app-form-field for="name" label="Name" [required]="true" [error]="getError(f.name)">
+                <input id="name" pInputText class="w-full" formControlName="name" autocomplete="off" />
+            </app-form-field>
+        </div>
+        <div class="field">
+            <app-form-field for="docName" label="Document Name" [required]="true" [error]="getError(f.docName)">
+                <input id="docName" pInputText class="w-full" formControlName="docName" autocomplete="off" />
+            </app-form-field>
+        </div>
+
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+            <app-form-field for="code" label="Code" [required]="false" [error]="getError(f.code)">
+                <input id="code" pInputText class="w-full" formControlName="code" autocomplete="off" />
+            </app-form-field>
+        </div>
+        
+        <div class="field">
+            <app-form-field for="city" label="City" [required]="true" [error]="getError(f.city)">
+                <input id="city" pInputText class="w-full" formControlName="city" autocomplete="off" />
+            </app-form-field>
+        </div>
+    </div>
+    <div class="mb-5">
+        <app-form-field for="address" label="Address" [required]="true" [error]="getError(f.address)">
+            <input id="address" pInputText class="w-full" formControlName="address" autocomplete="off" />
+        </app-form-field>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+        <div class="field">
+            <app-form-field for="phone" label="Phone" [required]="true" [error]="getError(f.phone)">
+                <input id="phone" pInputText class="w-full" formControlName="phone" autocomplete="off" />
+            </app-form-field>
+        </div>
+        <div class="field">
+            <app-form-field for="email" label="Email" [required]="true" [error]="getError(f.email)">
+                <input id="email" pInputText class="w-full" formControlName="email" autocomplete="off" type="email" />
+            </app-form-field>
+        </div>
+    </div>
+    @if(mode()==='create'){
+        <div class="grid grid-cols-2 gap-4">
+            <div class="field">
+                <app-form-field for="defaultWh" label="Add default warehouse" [required]="true" [error]="getError(f.defaultWh)">
+                    <p-toggleswitch formControlName="defaultWh" />
+                </app-form-field>
+            </div>
+        </div>
+    }
+     <div class="flex justify-end gap-2">
+        <p-button severity="secondary"  (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'" > 
+        </p-button>
+        @if (mode() !== 'view') {
+        <p-button raised severity="info" label="Save" styleClass="w-full" type="submit" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()">
+        </p-button>
+        }
+    </div>
+</form>

@@ -1,0 +1,53 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-5">
+        <label for="name" class="block mb-2 font-medium">Name</label>
+        <input id="name" pInputText class="w-full" type="text" formControlName="name" styleClass="w-full"
+            autocomplete="off" inputStyleClass="w-full" [attr.aria-invalid]="f.name.touched && f.name.invalid" />
+        @if (f.name.touched && f.name.invalid) {
+        <small class="text-red-500">
+            @if (f.name.hasError('required')) { Name is required. }
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="symbol" class="block mb-2 font-medium">Symbol</label>
+        <input id="symbol" pInputText class="w-full" type="text" formControlName="symbol" styleClass="w-full"
+            autocomplete="off" inputStyleClass="w-full" [attr.aria-invalid]="f.symbol.touched && f.symbol.invalid" />
+        @if (f.symbol.touched && f.symbol.invalid) {
+        <small class="text-red-500">
+            @if (f.symbol.hasError('required')) { Symbol is required. }
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="code" class="block mb-2 font-medium">Code</label>
+        <input id="code" pInputText class="w-full" type="text" formControlName="code" styleClass="w-full"
+            autocomplete="off" inputStyleClass="w-full" [attr.aria-invalid]="f.code.touched && f.code.invalid" />
+        @if (f.code.touched && f.code.invalid) {
+        <small class="text-red-500">
+            @if (f.code.hasError('required')) { Code is required. }
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="unitType" class="block mb-2 font-medium">Unit Type</label>
+        <p-select inputId="unitType" formControlName="unitType" [options]="unitTypes" optionLabel="name" optionValue="value"
+            [checkmark]="true" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Role"
+            class="w-full" />
+
+        @if (f.unitType.touched && f.unitType.invalid) {
+        <small class="block mt-1 text-red-500">
+            Unit Type is required.
+        </small>
+    }
+    </div>
+    <div class="flex justify-end gap-2">
+        <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'">
+        </p-button>
+        @if (mode() !== 'view') {
+        <p-button raised severity="info" label="Save" styleClass="w-full" type="submit" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()">
+        </p-button>
+        }
+    </div>
+</form>

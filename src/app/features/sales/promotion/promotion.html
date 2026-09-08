@@ -1,0 +1,8 @@
+<div class="flex justify-between mb-2">
+    <p-button (click)="add()">Add</p-button>
+    <p-iconfield>
+        <p-inputicon class="pi pi-search" />
+        <input type="text" (input)="onSearch($any($event.target).value)" pInputText
+        placeholder="Search" [value]="search()">
+    </p-iconfield>
+</div>

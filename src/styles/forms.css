@@ -1,0 +1,42 @@
+:root {
+    --focus-ring: var(--p-primary-500);
+}
+
+.p-inputtext,
+.p-password-input,
+.p-inputtextarea,
+.p-dropdown,
+.p-select,
+.p-multiselect {
+    transition:
+        border-color .2s,
+        box-shadow .2s,
+        background-color .2s;
+}
+
+.p-inputtext:focus,
+.p-password-input:focus,
+.p-inputtextarea:focus {
+    outline: none !important;
+    border-color: var(--focus-ring) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-ring) 20%, transparent) !important;
+}
+
+.p-dropdown:not(.p-disabled).p-focus,
+.p-select:not(.p-disabled).p-focus,
+.p-multiselect:not(.p-disabled).p-focus {
+    border-color: var(--focus-ring) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-ring) 20%, transparent) !important;
+}
+
+.p-inputtext::placeholder,
+.p-password-input::placeholder,
+.p-inputtextarea::placeholder {
+    color: var(--p-surface-500);
+}
+
+.p-inputtext:hover,
+.p-password-input:hover,
+.p-inputtextarea:hover {
+    border-color: var(--p-surface-400);
+}

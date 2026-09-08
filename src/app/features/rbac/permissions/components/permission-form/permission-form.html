@@ -1,0 +1,48 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col h-full">
+    <div class="mb-5">
+        <label for="role" class="block mb-2 font-medium">Module</label>
+        <p-select inputId="module" formControlName="module" [options]="modules()" optionLabel="name" optionValue="id"
+            [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Module" class="w-full" />
+
+        @if (f.module.touched && f.module.invalid) {
+        <small class="text-red-500">
+            Module is required.
+        </small>
+        }
+    </div>
+    @if(mode()=='create'){
+        <div class="mb-5">
+            <label for="role" class="block mb-2 font-medium">Actions</label>
+            <p-multiselect inputId="actions" formControlName="actions" [options]="actions" optionLabel="name"
+                optionValue="value" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select Actions"
+                class="w-full" />
+            @if (f.actions.touched && f.actions.invalid) {
+            <small class="text-red-500">
+                At least one action is required.
+            </small>
+            }
+        </div>
+    } 
+    @if(mode()!='create') {
+        <div class="mb-5">
+            <label for="role" class="block mb-2 font-medium">Action</label>
+            <p-select inputId="action" formControlName="action" [options]="actions" optionLabel="name"
+                optionValue="value" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select Actions"
+                class="w-full" />
+            @if (f.action.touched && f.action.invalid) {
+            <small class="text-red-500">
+                At least one action is required.
+            </small>
+            }
+        </div>
+    }
+    <div class="flex justify-end gap-2 mt-auto">
+        <p-button severity="secondary" (click)="cancel.emit()" [label]="mode() === 'view' ? 'Close' : 'Cancel'">
+        </p-button>
+        @if (mode() !== 'view') {
+        <p-button raised severity="info" label="Save" styleClass="w-full" type="submit" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()">
+        </p-button>
+        }
+    </div>
+</form>

@@ -1,0 +1,32 @@
+<form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+    <div class="mb-5">
+        <label for="role" class="block mb-2 font-medium">Role</label>
+        <input id="role" pInputText class="w-full" type="text" formControlName="name" styleClass="w-full"
+            inputStyleClass="w-full" [attr.aria-invalid]="f.name.touched && f.name.invalid" />
+        @if (f.name.touched && f.name.invalid) {
+        <small class="text-red-500">
+            @if (f.name.hasError('required')) { name is required. }
+            @if (f.name.hasError('minlength')) { Minimum 3 characters. }
+        </small>
+        }
+    </div>
+    <div class="mb-5">
+        <label for="role" class="block mb-2 font-medium">Description</label>
+        <textarea pInputText class="w-full" formControlName="description" styleClass="w-full"></textarea>
+    </div>
+    <div class="mb-5">
+        <p-togglebutton onLabel="Active" offLabel="Inactive" onIcon="pi pi-check" offIcon="pi pi-times" formControlName="is_active" class="w-36" ariaLabel="status" />
+    </div>
+
+    <div class="flex space-x-6">
+        @if (mode() !== 'view') {
+        <p-button raised severity="info" label="Save" styleClass="w-full" type="submit" [loading]="submitting()"
+            [disabled]="roleForm.invalid || submitting()">
+        </p-button>
+        }
+        <button pButton raised severity="secondary" styleClass="w-full" type="button" (click)="cancel.emit()">
+            {{ mode() === 'view' ? 'Close' : 'Cancel' }}
+        </button>
+
+    </div>
+</form>

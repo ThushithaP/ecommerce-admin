@@ -1,0 +1,109 @@
+<div class="min-h-screen bg-(--color-bg) flex">
+    <app-auth-banner></app-auth-banner>
+
+    <div class="flex-1 flex items-center justify-center px-6 py-2">
+        <div class="w-full max-w-lg bg-(--color-surface) border border-(--color-border) rounded-2xl shadow-lg p-6">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-(--color-fg)">Create Account</h2>
+                <p class="mt-2 text-(--color-fg-muted)">Start learning today.</p>
+            </div>
+
+            @if (serverError()) {
+            <div class="mt-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm" role="alert">
+                {{ serverError() }}
+            </div>
+            }
+
+            <form [formGroup]="signupForm" (ngSubmit)="submit()" novalidate>
+                <div class="mb-5">
+                    <label for="fullName" class="block mb-2 font-medium">Full Name</label>
+                    <input id="fullName" pInputText class="w-full" placeholder="John" formControlName="fullName"
+                        [attr.aria-invalid]="f.fullName.touched && f.fullName.invalid"
+                        aria-describedby="fullName-error" />
+                    @if (f.fullName.touched && f.fullName.invalid) {
+                    <small id="fullName-error" class="text-red-500">
+                        @if (f.fullName.hasError('required')) { Full name is required. }
+                        @if (f.fullName.hasError('minlength')) { Minimum 3 characters. }
+                    </small>
+                    }
+                </div>
+
+                <div class="mb-5">
+                    <label for="email" class="block mb-2 font-medium">Email</label>
+                    <p-iconfield>
+                        <input id="email" pInputText class="w-full" type="email" placeholder="john@example.com"
+                            formControlName="email" [attr.aria-invalid]="f.email.touched && f.email.invalid" />
+                    </p-iconfield>
+                    @if (f.email.pending) {
+                    <small class="text-(--color-fg-muted)">Checking availability...</small>
+                    } @else if (f.email.touched && f.email.invalid) {
+                    <small class="text-red-500">
+                        @if (f.email.hasError('required')) { Email is required. }
+                        @if (f.email.hasError('email')) { Invalid email address. }
+                        @if (f.email.hasError('emailTaken')) { This email is already registered. }
+                    </small>
+                    }
+                </div>
+
+                <div class="mb-5">
+                    <label for="password" class="block mb-2 font-medium">Password</label>
+                    <p-password id="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full"
+                        placeholder="Create password" formControlName="password" [feedback]="true" />
+                    @if (f.password.touched && f.password.invalid) {
+                    <small class="text-red-500">
+                        @if (f.password.hasError('required')) { Password is required. }
+                        @if (f.password.hasError('minlength')) { Minimum 8 characters. }
+                        @if (f.password.hasError('weakPassword')) {
+                        Must include upper &amp; lowercase letters, a number, and a special character.
+                        }
+                    </small>
+                    }
+                </div>
+
+                <div class="mb-6">
+                    <label for="confirmPassword" class="block mb-2 font-medium">Confirm Password</label>
+                    <p-password id="confirmPassword" [feedback]="false" [toggleMask]="true" styleClass="w-full"
+                        inputStyleClass="w-full" placeholder="Confirm password" formControlName="confirmPassword" />
+                    @if (f.confirmPassword.touched && f.confirmPassword.hasError('passwordMismatch')) {
+                    <small class="text-red-500">Passwords do not match.</small>
+                    }
+                </div>
+
+                <div class="flex items-start gap-3 mb-2">
+                    <p-checkbox binary="true" formControlName="terms" inputId="terms"></p-checkbox>
+                    <label for="terms" class="text-sm text-(--color-fg-muted)">
+                        I agree to the
+                        <a class="text-(--color-primary) font-medium cursor-pointer">Terms of Service</a>
+                        and
+                        <a class="text-(--color-primary) font-medium cursor-pointer">Privacy Policy</a>
+                    </label>
+                </div>
+                @if (f.terms.touched && f.terms.invalid) {
+                <small class="text-red-500 block mb-4">You must accept the Terms.</small>
+                }
+
+                <p-button label="Create Account" styleClass="w-full" type="submit" [loading]="submitting()"
+                    [disabled]="signupForm.invalid || submitting()" />
+
+                <div class="my-5">
+                    <p-divider align="center">
+                        <span class="text-gray-500 text-sm">OR</span>
+                    </p-divider>
+                </div>
+
+                <button type="button"
+                    class="w-full h-12 rounded-xl border border-(--color-border) flex justify-center items-center gap-3 hover:bg-gray-50 transition"
+                    (click)="continueWithGoogle()">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="" />
+                    Continue with Google
+                </button>
+
+                <div class="mt-8 text-center text-sm text-(--color-fg-muted)">
+                    Already have an account?
+                    <a class="text-(--color-primary) font-semibold hover:underline cursor-pointer" routerLink="/">Sign
+                        In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

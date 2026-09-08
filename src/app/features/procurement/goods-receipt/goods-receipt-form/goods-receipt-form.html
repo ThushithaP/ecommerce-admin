@@ -1,0 +1,178 @@
+<!-- <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h6 class="mb-2">Goods Receipt Details</h6>
+  <span>Rec {{receiptNo()}}</span>
+  <div class="grid grid-cols-3 gap-4">
+    <app-form-field for="purchaseOrder" label="Purchase Order" [required]="true" [error]="getError(f.purchaseOrder)">
+      <p-select inputId="purchaseOrder" formControlName="purchaseOrder" [options]="purchaseOrders()"
+        optionLabel="poNumber" optionValue="id" [filter]="true" filterBy="poNumber" [showClear]="true"
+        placeholder="Select a purchase order" class="w-full"
+        (onChange)="onPurchaseOrderSelected($event.value)" />
+    </app-form-field>
+
+    <app-form-field for="receivedBy" label="Received By">
+      <p-select inputId="receivedBy" formControlName="receivedBy" [options]="staff()" optionLabel="name" optionValue="id"
+        [filter]="true" filterBy="name" [showClear]="true" placeholder="Select staff member" class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="receivedAt" label="Received At" [required]="true" [error]="getError(f.receivedAt)">
+      <p-datepicker formControlName="receivedAt" [showIcon]="true" [showTime]="true" class="w-full" />
+    </app-form-field>
+  </div>
+
+  <div class="mt-4">
+    <app-form-field for="notes" label="Notes">
+      <textarea pInputText class="w-full" formControlName="notes"></textarea>
+    </app-form-field>
+  </div>
+
+  @if (loadedPO(); as po) {
+    <div class="mt-4 p-3 rounded bg-surface-50 text-sm">
+      <strong>Supplier:</strong> {{ po.supplierName }} &nbsp;|&nbsp;
+      <strong>Warehouse:</strong> {{ po.warehouseName }}
+    </div>
+  }
+
+ 
+  <h6 class="mb-2 mt-6">Items Being Received</h6>
+
+  @if (loadingPO()) {
+    <p class="text-surface-500">Loading purchase order items...</p>
+  } @else if (!hasReceivableItems() && f.purchaseOrder.value) {
+    <p class="text-surface-500">This purchase order has no remaining items to receive.</p>
+  }
+
+  <div class="rounded-lg border border-surface-200">
+    @for (item of itemsArray.controls; track $index; let i = $index) {
+      <div [formGroup]="item" class="px-3 py-3 border-b border-surface-100">
+        <div class="text-sm font-medium mb-2">
+          {{ item.controls.productName.value }} ({{ item.controls.sku.value }})
+          — Ordered: {{ item.controls.quantityOrdered.value }},
+          Already Received: {{ item.controls.quantityAlreadyReceived.value }}
+        </div>
+
+        <div class="grid grid-cols-6 gap-2 items-end">
+          <app-form-field [for]="'qtyReceived-' + i" label="Qty Received" [required]="true" [error]="getError(item.controls.quantityReceived)">
+            <input pInputText type="number" class="w-full" formControlName="quantityReceived" />
+          </app-form-field>
+
+          <app-form-field [for]="'qtyAccepted-' + i" label="Qty Accepted" [required]="true" [error]="getError(item.controls.quantityAccepted)">
+            <input pInputText type="number" class="w-full" formControlName="quantityAccepted" />
+          </app-form-field>
+
+          <app-form-field [for]="'batchNo-' + i" label="Batch No">
+            <input pInputText class="w-full" formControlName="batchNo" />
+          </app-form-field>
+
+          <app-form-field [for]="'mfgDate-' + i" label="Mfg Date">
+            <p-datepicker formControlName="manufacturedDate" [showIcon]="true" class="w-full" />
+          </app-form-field>
+
+          <app-form-field [for]="'expDate-' + i" label="Expiry Date">
+            <p-datepicker formControlName="expiryDate" [showIcon]="true" class="w-full" />
+          </app-form-field>
+
+          <button type="button" class="text-red-500" (click)="removeItem(i)">✕ Skip</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button raised severity="info" label="Record Receipt" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+  </div>
+</form> -->
+
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="flex justify-between mb-2">
+    <h6>Goods Receipt Details</h6>
+    <h5 class="font-bold">{{receiptNo()}}</h5>
+
+  </div>
+  <div class="grid grid-cols-3 gap-4">
+    <app-form-field for="purchaseOrder" label="Purchase Order" [required]="true" [error]="getError(f.purchaseOrder)">
+      <p-select inputId="purchaseOrder" formControlName="purchaseOrder" [options]="purchaseOrders()"
+        optionLabel="poNumber" optionValue="id" [filter]="true" filterBy="poNumber" [showClear]="true"
+        placeholder="Select a purchase order" class="w-full"
+        (onChange)="onPurchaseOrderSelected($event.value)" />
+    </app-form-field>
+
+    <app-form-field for="receivedBy" label="Received By">
+      <p-select inputId="receivedBy" formControlName="receivedBy" [options]="staff()" optionLabel="name" optionValue="id"
+        [filter]="true" filterBy="name" [showClear]="true" placeholder="Select staff member" class="w-full" />
+    </app-form-field>
+
+    <app-form-field for="receivedAt" label="Received At" [required]="true" [error]="getError(f.receivedAt)">
+      <p-datepicker formControlName="receivedAt" [showIcon]="true" [showTime]="true" class="w-full" />
+    </app-form-field>
+  </div>
+
+  <div class="mt-4">
+    <app-form-field for="notes" label="Notes">
+      <textarea pInputText class="w-full" formControlName="notes"></textarea>
+    </app-form-field>
+  </div>
+
+  @if (loadedPO(); as po) {
+    <div class="mt-4 p-3 rounded bg-surface-50 text-sm">
+      <strong>Supplier:</strong> {{ po.supplierName }} &nbsp;|&nbsp;
+      <strong>Warehouse:</strong> {{ po.warehouseName }}
+    </div>
+  }
+
+  <h6 class="mb-2 mt-6">Items {{ isViewMode() ? 'Received' : 'Being Received' }}</h6>
+
+  @if (loadingPO() || loading()) {
+    <p class="text-surface-500">Loading...</p>
+  } @else if (!hasReceivableItems() && f.purchaseOrder.value && !isViewMode()) {
+    <p class="text-surface-500">This purchase order has no remaining items to receive.</p>
+  }
+
+  <div class="rounded-lg border border-surface-200">
+    @for (item of itemsArray.controls; track $index; let i = $index) {
+      <div [formGroup]="item" class="px-3 py-3 border-b border-surface-100">
+        <div class="text-sm font-medium mb-2">
+          {{ item.controls.productName.value }} ({{ item.controls.sku.value }})
+          @if (!isViewMode()) {
+            — Ordered: {{ item.controls.quantityOrdered.value }},
+            Already Received: {{ item.controls.quantityAlreadyReceived.value }}
+          }
+        </div>
+
+        <div class="grid grid-cols-6 gap-2 items-end">
+          <app-form-field [for]="'qtyReceived-' + i" label="Qty Received" [required]="true" [error]="getError(item.controls.quantityReceived)">
+            <input pInputText type="number" class="w-full" formControlName="quantityReceived" />
+          </app-form-field>
+
+          <app-form-field [for]="'qtyAccepted-' + i" label="Qty Accepted" [required]="true" [error]="getError(item.controls.quantityAccepted)">
+            <input pInputText type="number" class="w-full" formControlName="quantityAccepted" />
+          </app-form-field>
+
+          <app-form-field [for]="'batchNo-' + i" label="Batch No">
+            <input pInputText class="w-full" formControlName="batchNo" />
+          </app-form-field>
+
+          <app-form-field [for]="'mfgDate-' + i" label="Mfg Date">
+            <p-datepicker formControlName="manufacturedDate" [showIcon]="true" class="w-full" />
+          </app-form-field>
+
+          <app-form-field [for]="'expDate-' + i" label="Expiry Date">
+            <p-datepicker formControlName="expiryDate" [showIcon]="true" class="w-full" />
+          </app-form-field>
+
+          @if (!isViewMode()) {
+            <button type="button" class="text-red-500" (click)="removeItem(i)">✕ Skip</button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" [label]="mode() === 'view' ? 'Close' : 'Cancel'" type="button"
+      (onClick)="onCancel()" />
+    @if (!isViewMode()) {
+      <p-button raised severity="info" label="Record Receipt" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+    }
+    </div>
+</form>

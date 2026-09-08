@@ -1,0 +1,240 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+
+    <!-- Basic Information -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- Name -->
+        <div class="field">
+            <label for="name" class="block mb-2 font-medium">
+                Name
+            </label>
+
+            <input id="name" pInputText type="text" formControlName="name" class="w-full" autocomplete="off"
+                [attr.aria-invalid]="f.name.touched && f.name.invalid" />
+
+            @if (f.name.touched && f.name.invalid) {
+            <small class="block mt-1 text-red-500">
+                @if (f.name.hasError('required')) {
+                Name is required.
+                }
+                @if (f.name.hasError('minlength')) {
+                Minimum 3 characters.
+                }
+            </small>
+            }
+        </div>
+
+        <!-- Employee Number -->
+        <div class="field">
+            <label for="emp_no" class="block mb-2 font-medium">
+                Emp No
+            </label>
+
+            <input id="emp_no" pInputText type="text" formControlName="emp_no" class="w-full" autocomplete="off"
+                [attr.aria-invalid]="f.emp_no.touched && f.emp_no.invalid" />
+
+            @if (f.emp_no.touched && f.emp_no.invalid) {
+            <small class="block mt-1 text-red-500">
+                Emp no is required.
+            </small>
+            }
+        </div>
+
+        <!-- Role -->
+        <div class="field">
+            <label for="role" class="block mb-2 font-medium">
+                Role
+            </label>
+
+            <p-select inputId="role" formControlName="role" [options]="roles()" optionLabel="name" optionValue="id"
+                [checkmark]="true" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Role"
+                class="w-full" />
+
+            @if (f.role.touched && f.role.invalid) {
+            <small class="block mt-1 text-red-500">
+                Role is required.
+            </small>
+            }
+        </div>
+
+    </div>
+
+
+    <!-- Employment Information -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- Date of Birth -->
+        <div class="field">
+            <label for="dob" class="block mb-2 font-medium">
+                Date of Birth
+            </label>
+
+            <p-datepicker formControlName="dob" inputId="dob" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"
+                pInputMask="99/99/9999" [showIcon]="true" [showOnFocus]="false" class="w-full" />
+
+            @if (f.dob.touched && f.dob.invalid) {
+            <small class="block mt-1 text-red-500">
+                Date of birth is required.
+            </small>
+            }
+        </div>
+
+        <!-- Employment Status -->
+        <div class="field">
+            <label for="employment_status" class="block mb-2 font-medium">
+                Employment Status
+            </label>
+
+            <p-select inputId="employment_status" formControlName="employment_status" [options]="status"
+                optionLabel="name" optionValue="value" [checkmark]="true" [filter]="true" filterBy="name"
+                [showClear]="true" placeholder="Select status" class="w-full" />
+
+            @if (f.employment_status.touched && f.employment_status.invalid) {
+            <small class="block mt-1 text-red-500">
+                Employment status is required.
+            </small>
+            }
+        </div>
+
+        <div class="field">
+            <label for="email" class="block mb-2 font-medium">
+                Email
+            </label>
+
+            <input id="email" pInputText type="text" formControlName="email" class="w-full" autocomplete="off"
+                [attr.aria-invalid]="f.email.touched && f.email.invalid" />
+
+            @if (f.email.touched && f.email.invalid) {
+            <small class="block mt-1 text-red-500">
+                @if (f.email.hasError('required')) {
+                email is required.
+                }
+                @if (f.email.hasError('minlength')) {
+                Minimum 3 characters.
+                }
+            </small>
+            }
+        </div>
+
+    </div>
+
+
+    <!-- Additional Information -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="field">
+            <label for="phone" class="block mb-2 font-medium">
+                Phone Number
+            </label>
+
+            <input id="phone" pInputText type="text" formControlName="phone" class="w-full" autocomplete="off"
+                [attr.aria-invalid]="f.phone.touched && f.phone.invalid" />
+
+            @if (f.phone.touched && f.phone.invalid) {
+            <small class="block mt-1 text-red-500">
+                @if (f.phone.hasError('required')) {
+                Phone number is required.
+                }
+            </small>
+            }
+        </div>
+
+        <!-- Gender -->
+        <div class="field">
+            <label for="gender" class="block mb-2 font-medium">
+                Gender
+            </label>
+
+            <p-select inputId="gender" formControlName="gender" [options]="genders" optionLabel="name"
+                optionValue="value" [checkmark]="true" [filter]="true" filterBy="name" [showClear]="true"
+                placeholder="Select gender" class="w-full" />
+
+            @if (f.gender.touched && f.gender.invalid) {
+            <small class="block mt-1 text-red-500">
+                Gender is required.
+            </small>
+            }
+        </div>
+
+        <!-- Joined Date -->
+        <div class="field">
+            <label for="date_joined" class="block mb-2 font-medium">
+                Joined Date
+            </label>
+
+            <p-datepicker formControlName="date_joined" inputId="date_joined" [showIcon]="true" [showOnFocus]="false"
+                inputId="dob" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" pInputMask="99/99/9999" class="w-full" />
+
+            @if (f.date_joined.touched && f.date_joined.invalid) {
+            <small class="block mt-1 text-red-500">
+                Joined date is required.
+            </small>
+            }
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+        <!-- Address -->
+        <div class="col-span-2">
+            <label for="address" class="block mb-2 font-medium">
+                Address
+            </label>
+
+            <textarea id="address" pTextarea formControlName="address" rows="4" class="w-full"></textarea>
+
+            @if (f.address.touched && f.address.invalid) {
+            <small class="block mt-1 text-red-500">
+                Address is required.
+            </small>
+            }
+        </div>
+
+        <div>
+            <div class="field">
+                <label for="is_system_user" class="block mb-2 font-medium">
+                    System User
+                </label>
+
+                <div class="flex items-center h-10.5">
+                    <p-toggleswitch inputId="is_system_user" formControlName="is_system_user" />
+                </div>
+
+                @if (f.is_system_user.touched && f.is_system_user.invalid) {
+                <small class="block mt-1 text-red-500">
+                    Status is required.
+                </small>
+                }
+            </div>
+
+            <div class="field">
+                <label for="is_active" class="block mb-2 font-medium">
+                    Status
+                </label>
+
+                <div class="flex items-center h-10.5">
+                    <p-toggleswitch inputId="is_active" formControlName="is_active" />
+                </div>
+
+                @if (f.is_active.touched && f.is_active.invalid) {
+                <small class="block mt-1 text-red-500">
+                    Status is required.
+                </small>
+                }
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Actions -->
+    <div class="flex justify-end items-center gap-3 pt-4 border-t border-surface-200">
+
+        <p-button type="button" severity="secondary" [label]="mode() === 'view' ? 'Close' : 'Cancel'"
+            (click)="cancel.emit()" />
+
+        @if (mode() !== 'view') {
+        <p-button type="submit" label="Save" severity="info" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()" />
+        }
+
+    </div>
+</form>

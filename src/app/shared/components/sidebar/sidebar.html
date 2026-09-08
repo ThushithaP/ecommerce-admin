@@ -1,0 +1,235 @@
+<!-- <aside
+    class="app-sidebar"
+    [class.collapsed]="sidebarCollapsed">
+
+    <nav class="flex h-full flex-col p-3">
+
+        <a
+            routerLink="/"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-home"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Dashboard</span>
+            }
+
+        </a>
+        <a
+            routerLink="/"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-building"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Branches</span>
+            }
+
+        </a>
+        <a
+            routerLink="product"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-building"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Products</span>
+            }
+
+        </a>
+        <a
+            routerLink="rbac/roles"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-building"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Roles</span>
+            }
+
+        </a>
+        <a
+            routerLink="rbac/modules"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-building"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Modules</span>
+            }
+
+        </a>
+        <a
+            routerLink="rbac/permissions"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-building"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Permissions</span>
+            }
+
+        </a>
+        <a
+            routerLink="category"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-building"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Category</span>
+            }
+
+        </a>
+        <a
+            routerLink="category-path"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-building"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Category Path</span>
+            }
+
+        </a>
+        
+        <a
+            routerLink="staff"
+            routerLinkActive="active"
+            *appHasPermission="'staff.create'"
+            class="app-sidebar-item">
+
+            <i class="pi pi-building"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Staff</span>
+            }
+
+        </a>
+
+        <a
+            routerLink="brand"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-book"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Brand</span>
+            }
+
+        </a>
+
+        <a
+            routerLink="attribute-group"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-calendar"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Attribute Group</span>
+            }
+
+        </a>
+
+        <a
+            routerLink="unit"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-file"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Unit</span>
+            }
+
+        </a>
+
+        <a
+            routerLink="attribute-definition"
+            routerLinkActive="active"
+            class="app-sidebar-item">
+
+            <i class="pi pi-users"></i>
+
+            @if(!sidebarCollapsed){
+                <span>Attribute Definition</span>
+            }
+
+        </a>
+
+        <div class="mt-auto">
+
+            <a
+                routerLink="attribute-option"
+                routerLinkActive="active"
+                class="app-sidebar-item">
+
+                <i class="pi pi-cog"></i>
+
+                @if(!sidebarCollapsed){
+                    <span>Attribute Option</span>
+                }
+
+            </a>
+
+        </div>
+
+    </nav>
+
+</aside> -->
+
+
+<aside
+    class="app-sidebar"
+    [class.collapsed]="sidebarCollapsed()"
+>
+    <nav class="app-sidebar-nav">
+
+        @for (section of sections(); track section.label) {
+
+            <section class="app-sidebar-section">
+
+                @if (!sidebarCollapsed()) {
+                    <h3 class="app-sidebar-section-title">
+                        {{ section.label }}
+                    </h3>
+                }
+
+                <div class="app-sidebar-section-items">
+
+                    @for (item of section.items; track item.route) {
+
+                        <a
+                            [routerLink]="item.route"
+                            routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+                            class="app-sidebar-item"
+                            [attr.title]="sidebarCollapsed() ? item.label : null"
+                        >
+                            <i [class]="item.icon"></i>
+
+                            @if (!sidebarCollapsed()) {
+                                <span>{{ item.label }}</span>
+                            }
+                        </a>
+
+                    }
+
+                </div>
+
+            </section>
+
+        }
+
+    </nav>
+</aside>
