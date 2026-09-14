@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<p-dialog [header]="dialogHeader()" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+<p-dialog [header]="dialogHeader()" [modal]="true" [(visible)]="visible" [maximizable]="true" [style]="{ width: '25rem' }">
     <app-customer-form
         (cancel)="visible = false"
         [record]="selectedRecord()"

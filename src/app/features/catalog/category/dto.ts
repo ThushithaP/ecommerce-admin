@@ -7,6 +7,7 @@ export interface CategoryFormValues {
 export interface Categories {
     id: number;
     name: string;
+    position: number;
     description: string;
     is_active: boolean;
     created_at: string;

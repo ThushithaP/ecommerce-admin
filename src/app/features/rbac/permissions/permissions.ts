@@ -13,16 +13,24 @@ import { PermissionService } from './services/permission.service';
 import { ToastService } from '@shared/services/toast/toast.service';
 import { DataTable } from "@shared/components/data-table/data-table";
 import { InputText } from "primeng/inputtext";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-permissions',
-  imports: [PermissionForm, Dialog, Button, IconField, InputIcon, DataTable, InputText],
+  imports: [BreadcrumbModule, PermissionForm, Dialog, Button, IconField, InputIcon, DataTable, InputText],
   templateUrl: './permissions.html',
   styleUrl: './permissions.css',
 })
 export class Permissions {
   private readonly permissionService = inject(PermissionService);
   private readonly toast = inject(ToastService);
+
+  protected readonly entityLabel = 'Permission';
+
+  items: MenuItem[] = [{ icon: 'pi pi-lock', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
+
 
   visible: boolean = false;
   readonly dialogHeader = computed(() =>

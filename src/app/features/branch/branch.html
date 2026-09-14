@@ -21,10 +21,7 @@
     </div>
 </div>
 
-<div class="flex justify-end gap-1.5 mb-2">
-</div>
-
-<p-dialog [header]="dialogHeader()" [modal]="true" [(visible)]="visible" [style]="{ width: '45rem' }">
+<p-dialog [header]="dialogHeader()" [modal]="true" [(visible)]="visible" [maximizable]="true" [style]="{ width: '45rem' }">
     <app-branch-form
         (cancel)="visible = false"
         [record]="selectedRecord()"

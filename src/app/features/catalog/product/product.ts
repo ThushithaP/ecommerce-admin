@@ -10,10 +10,12 @@ import { Image, ProductFormValues, Products } from './dto';
 import { ProductService } from './services/product.service';
 import { TableAction, TableColumn } from '@shared/models/table-column.model';
 import { formatDateTime } from '@shared/utills';
+import { Breadcrumb } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api'
 
 @Component({
   selector: 'app-product',
-  imports: [ButtonModule, DialogModule, InputTextModule, IconField, InputIcon, DataTable],
+  imports: [ButtonModule, DialogModule, InputTextModule, IconField, InputIcon, DataTable, Breadcrumb],
   templateUrl: './product.html',
   styleUrl: './product.css',
 })
@@ -22,6 +24,9 @@ export class Product extends BaseRoutedCrudPage<Products, ProductFormValues> {
   protected readonly service = inject(ProductService);
   protected readonly entityLabel = 'Product';
   protected readonly basePath = 'admin/product/manage';
+
+  items: MenuItem[] = [{ icon: 'pi pi-box', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<Products>[] = [
     { key: 'images', label: 'Image', type: 'image',width: '80px',imageUrl: (images: Image[]) =>

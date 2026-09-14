@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Modules } from './modules';
+import { TaxClass } from './tax-class';
 
-describe('Modules', () => {
-  let component: Modules;
-  let fixture: ComponentFixture<Modules>;
+describe('TaxClass', () => {
+  let component: TaxClass;
+  let fixture: ComponentFixture<TaxClass>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Modules],
+      imports: [TaxClass],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Modules);
+    fixture = TestBed.createComponent(TaxClass);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

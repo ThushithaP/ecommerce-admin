@@ -1,9 +1,9 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { ModuleService } from '@features/rbac/modules/service/module.service';
-import { Module } from '@features/rbac/modules/dto';
-import { SelectModule } from 'primeng/select';
+import { Modules } from '@features/rbac/modules/dto';
+import { SelectFilterEvent, SelectModule } from 'primeng/select';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreatePermissionDto, Permission, PermissionAction, PermissionFormValues, UpdatePermissionDto } from '../../dto';
+import { CreatePermissionDto, Permission, PermissionAction, UpdatePermissionDto } from '../../dto';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormMode } from '@shared/types';
 import { Button } from "primeng/button";
@@ -26,7 +26,7 @@ export class PermissionForm {
   readonly submitting = signal(false);
   readonly serverError = signal<string | null>(null);
 
-  readonly modules = signal<Module[]>([]);
+  readonly modules = signal<Modules[]>([]);
 
   readonly actions: PermissionAction[] = [
     { value: 'view', name: 'View' },
@@ -44,107 +44,70 @@ export class PermissionForm {
 
   });
 
-  // constructor() {
-  //   effect(() => {
-  //     const record = this.record();
-  //     const mode = this.mode();
-
-  //     this.submitting.set(false);
-  //     this.serverError.set(null);
-
-  //     // Reset first
-  //     this.form.reset({
-  //       module: record?.module ?? '',
-  //       action: record?.action ?? '',
-  //       actions: [],
-  //     });
-
-  //     // Clear validators
-  //     this.form.controls.action.clearValidators();
-  //     this.form.controls.actions.clearValidators();
-
-  //     if (mode === 'create') {
-  //       this.form.controls.actions.setValidators(Validators.required);
-  //     }
-
-  //     if (mode === 'edit') {
-  //       this.form.controls.action.setValidators(Validators.required);
-  //     }
-
-  //     this.form.controls.action.updateValueAndValidity();
-  //     this.form.controls.actions.updateValueAndValidity();
-
-  //     if (mode === 'view') {
-  //       this.form.disable();
-  //     } else {
-  //       this.form.enable();
-  //     }
-  //   });
-  // }
-
   constructor() {
-  let lastId: string | null | undefined = undefined;
+    let lastId: string | null | undefined = undefined;
 
-  // Handle record changes
-  effect(() => {
-    const record = this.record();
-    const currentId = record?.id ?? null;
-
-    if (currentId !== lastId) {
-      lastId = currentId;
-
-      this.form.reset({
-        module: record?.module ?? '',
-        action: record?.action ?? '',
-        actions: [],
-      });
-
-      this.submitting.set(false);
-      this.serverError.set(null);
-    }
-  });
-
-  // Handle mode changes
-  effect(() => {
-    const mode = this.mode();
-
-    // Clear existing validators
-    this.form.controls.action.clearValidators();
-    this.form.controls.actions.clearValidators();
-
-    // Apply validators based on mode
-    if (mode === 'create') {
-      this.form.controls.actions.setValidators(Validators.required);
-    } else if (mode === 'edit') {
-      this.form.controls.action.setValidators(Validators.required);
-    }
-
-    // Recalculate validation
-    this.form.controls.action.updateValueAndValidity();
-    this.form.controls.actions.updateValueAndValidity();
-
-    // Enable / disable form
-    if (mode === 'view') {
-      this.form.disable();
-    } else {
-      this.form.enable();
-    }
-  });
-}
-
-  fetchModule(): void {
-    this.moduleService.list().subscribe({
-      next: (res) => {
-        this.modules.set(res.results);
-      },
-      error: () => {
-        // this.toast.error('Failed to retrieve.');
+    // Handle record changes
+    effect(() => {
+      const record = this.record();
+      const currentId = record?.id ?? null;
+      if(record?.module != null){
+        this.fetchLookups(record?.module);
       }
-    })
+
+      if (currentId !== lastId) {
+        lastId = currentId;
+
+        this.form.reset({
+          module: record?.module ?? '',
+          action: record?.action ?? '',
+          actions: [],
+        });
+
+        this.submitting.set(false);
+        this.serverError.set(null);
+      }
+    });
+
+    // Handle mode changes
+    effect(() => {
+      const mode = this.mode();
+
+      // Clear existing validators
+      this.form.controls.action.clearValidators();
+      this.form.controls.actions.clearValidators();
+
+      // Apply validators based on mode
+      if (mode === 'create') {
+        this.form.controls.actions.setValidators(Validators.required);
+      } else if (mode === 'edit') {
+        this.form.controls.action.setValidators(Validators.required);
+      }
+
+      // Recalculate validation
+      this.form.controls.action.updateValueAndValidity();
+      this.form.controls.actions.updateValueAndValidity();
+
+      // Enable / disable form
+      if (mode === 'view') {
+        this.form.disable();
+      } else {
+        this.form.enable();
+      }
+    });
   }
 
-  ngOnInit(): void {
-    this.fetchModule();
+  onModuleFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.moduleService.list({ search, page: 0, pageSize: 20, ordering: '' }).subscribe(response =>
+      this.modules.set(response.results)
+    );
+  }
+
+  private fetchLookups(moduleId:string):void {
+    if (moduleId !='') {
+      this.moduleService.getById(moduleId).subscribe({ next: (res) => this.modules.set([res])});
+    }
   }
 
   get f() {

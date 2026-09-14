@@ -1,20 +1,27 @@
-<div class="flex justify-between mb-2">
+<div class="flex items-center justify-between mb-2 pt-0">
+    <div>
+        <h2 class="text-xl font-semibold m-0">{{entityLabel}}</h2>
+    </div>
+    <p-breadcrumb [model]="items" [home]="home" />
+</div>
+
+<div class="flex items-center justify-between gap-2 mb-3">
     <p-button (click)="open()">Add</p-button>
-    <p-iconfield>
-        <p-inputicon class="pi pi-search" />
-        <input type="text" (input)="onSearch($any($event.target).value)" pInputText
-        placeholder="Search" [value]="search()">
-    </p-iconfield>
+    <div class="flex items-center gap-2">
+        <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input type="text" (input)="onSearch($any($event.target).value)" pInputText
+            placeholder="Search" [value]="search()">
+        </p-iconfield>
+
+        <button class="bg-emerald-900 text-white p-2 pi pi-filter-slash" pTooltip="Clear"
+            tooltipStyleClass="table-action-tooltip" tooltipPosition="bottom" (click)="clearFilters()"></button>
+        <button class="bg-emerald-900 text-white p-2 pi pi-refresh" pTooltip="Refresh"
+            tooltipStyleClass="table-action-tooltip" tooltipPosition="bottom" (click)="fetchRecords()"></button>
+    </div>
 </div>
 
-<div class="flex justify-end gap-1.5 mb-2">
-    <button class="bg-emerald-900 text-white p-1 pi pi-filter-slash" pTooltip="Clear"
-        tooltipStyleClass="table-action-tooltip" tooltipPosition="bottom" (click)="clearFilters()"></button>
-    <button class="bg-emerald-900 text-white p-1 pi pi-refresh" pTooltip="Refresh"
-        tooltipStyleClass="table-action-tooltip" tooltipPosition="bottom" (click)="fetchRecords()"></button>
-</div>
-
-<p-dialog [header]="dialogHeader()" [modal]="true" [(visible)]="visible" [style]="{ width: '45rem' }">
+<p-dialog [header]="dialogHeader()" [modal]="true" [(visible)]="visible" [maximizable]="true" [style]="{ width: '45rem' }">
     <app-coupon-form
         (cancel)="visible = false"
         [record]="selectedRecord()"

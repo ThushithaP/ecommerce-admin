@@ -1,13 +1,13 @@
 export interface CreateCategoryPathDto {
-    category_ids: number[];
+    categoryIds: number[];
 }
 
 export interface UpdateCategoryPathDto {
-    category_ids: number[];
+    categoryIds: number[];
 }
 
 export interface CategoryPathFormValues {
-  category_ids: number[];
+  categoryIds: number[];
 }
 
 export interface CategoryPathListParams {
@@ -26,7 +26,7 @@ export interface CategoryPathListParams {
 export interface CategoryPathItem {
   id: number;
   category: number;
-  category_name: string;
+  categoryName: string;
   position: number;
 }
 

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { BaseModalFormComponent } from '@shared/base/form/base-modal-form.component';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '@shared/components/form-field/form-field';
 import { getFieldError } from '@shared/utills/form-errors';
 import { InputText } from 'primeng/inputtext';
@@ -38,7 +38,7 @@ export class CouponForm extends BaseModalFormComponent<Coupons, CouponFormValues
     return this.form.controls;
   }
 
-  override getError(control: any) {
+  override getError(control: AbstractControl) {
     return getFieldError(control);
   }
 

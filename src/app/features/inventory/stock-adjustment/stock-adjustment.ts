@@ -11,16 +11,21 @@ import { InputText } from "primeng/inputtext";
 import { StockAdjustmentFormValue, StockAdjustments } from './dto';
 import { StockAdjustmentService } from './services/stock-adjustment.service';
 import { StockAdjustmentForm } from "./stock-adjustment-form/stock-adjustment-form";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-stock-adjustment',
-  imports: [Button, IconField, InputIcon, InputText, Dialog, StockAdjustmentForm, DataTable],
+  imports: [BreadcrumbModule, Button, IconField, InputIcon, InputText, Dialog, StockAdjustmentForm, DataTable],
   templateUrl: './stock-adjustment.html',
   styleUrl: './stock-adjustment.css',
 })
 export class StockAdjustment extends BaseModalCrudPage<StockAdjustments, StockAdjustmentFormValue> {
   protected readonly service = inject(StockAdjustmentService);
   protected readonly entityLabel = 'Stock Adjustment';
+
+  items: MenuItem[] = [{ icon: 'pi pi-list', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<StockAdjustments>[] = [
     { key: 'name', label: 'Name', sortable: true },

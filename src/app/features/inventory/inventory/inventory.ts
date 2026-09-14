@@ -9,10 +9,12 @@ import { Button } from "primeng/button";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { InputText } from "primeng/inputtext";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-inventory',
-  imports: [DataTable, Button, IconField, InputIcon, InputText],
+  imports: [BreadcrumbModule, DataTable, Button, IconField, InputIcon, InputText],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css',
 })
@@ -20,6 +22,9 @@ export class Inventory extends BaseRoutedCrudPage<Inventories, InventoryFormValu
   protected readonly basePath = 'admin/inventory/inventory/manage';
   protected readonly service = inject(InventoryService)
   protected readonly entityLabel = 'Inventory';
+
+  items: MenuItem[] = [{ icon: 'pi pi-warehouse', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<Inventories>[] = [
     { key: 'productName', label: 'Product', sortable: true },

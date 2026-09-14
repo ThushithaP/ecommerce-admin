@@ -77,6 +77,7 @@ export abstract class BaseModalFormComponent<TRecord, TFormValue extends Record<
         const payload = this.toPayload(raw);
             
         this.save.emit(payload);
+        this.form.reset(this.emptyValues());
     }
 
     onCancel(): void {

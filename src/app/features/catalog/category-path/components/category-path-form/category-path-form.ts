@@ -1,22 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Categories } from '@features/catalog/category/dto';
 import { CategoryService } from '@features/catalog/category/services/category.service';
 import { Button } from "primeng/button";
 import { TableModule } from "primeng/table";
 import { Card } from "primeng/card";
-import { Select } from "primeng/select";
+import { Select, SelectFilterEvent } from "primeng/select";
 import { FormMode } from '@shared/types';
 import { CategoriesPath, CategoryPathFormValues } from '@features/catalog/category-path/dto';
 
 @Component({
   selector: 'app-category-path-form',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, Button, TableModule, Card, Select],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, Button, TableModule, Select],
   templateUrl: './category-path-form.html',
   styleUrl: './category-path-form.css',
 })
-export class CategoryPathForm implements OnInit {
+export class CategoryPathForm  {
   private readonly categoryService = inject(CategoryService);
   private readonly fb = inject(FormBuilder);
 
@@ -35,7 +35,7 @@ export class CategoryPathForm implements OnInit {
   readonly isViewMode = signal(false);   // drives disabling add/remove/move buttons in template
 
   readonly form = this.fb.nonNullable.group({
-    category_ids: this.fb.nonNullable.control<number[]>([], Validators.required),
+    categoryIds: this.fb.nonNullable.control<number[]>([], Validators.required),
   });
 
   get f() {
@@ -55,19 +55,21 @@ export class CategoryPathForm implements OnInit {
         this.serverError.set(null);
 
         if (record) {
-          
+
           // Reconstruct selectedCategories from record.items, ordered by position
           const items = [...record.items].sort((a, b) => a.position - b.position);
+
           const rebuilt: Categories[] = items.map((item) => ({
             id: item.category,
-            name: item.category_name,
+            name: item.categoryName,
+            position: item.position,
           } as Categories));
 
           this.selectedCategories.set(rebuilt);
-          this.form.reset({ category_ids: rebuilt.map((c) => c.id) });
+          this.form.reset({ categoryIds: rebuilt.map((c) => c.id) });
         } else {
           this.selectedCategories.set([]);
-          this.form.reset({ category_ids: [] });
+          this.form.reset({ categoryIds: [] });
         }
       }
     });
@@ -79,15 +81,11 @@ export class CategoryPathForm implements OnInit {
     });
   }
 
-  fetchCategories() {
-    this.categoryService.list().subscribe({
-      next: (res) => this.categories.set(res.results),
-      error: (err) => console.log(err),
-    });
-  }
-
-  ngOnInit(): void {
-    this.fetchCategories();
+  onCategoryFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.categoryService.list({ search, page: 0, pageSize: 20, ordering: '' }).subscribe(response =>
+      this.categories.set(response.results)
+    );
   }
 
   addCategory(): void {
@@ -98,14 +96,14 @@ export class CategoryPathForm implements OnInit {
     if (this.selectedCategories().some((c) => c.id === category.id)) return;
 
     this.selectedCategories.update((items) => [...items, category]);
-    this.form.patchValue({ category_ids: this.selectedCategories().map((c) => c.id) });
+    this.form.patchValue({ categoryIds: this.selectedCategories().map((c) => c.id) });
     this.selectedCategoryId = null;
   }
 
   remove(index: number): void {
     if (this.isViewMode()) return;
     this.selectedCategories.update((items) => items.filter((_, i) => i !== index));
-    this.form.patchValue({ category_ids: this.selectedCategories().map((c) => c.id) });
+    this.form.patchValue({ categoryIds: this.selectedCategories().map((c) => c.id) });
   }
 
   moveUp(index: number): void {
@@ -113,7 +111,7 @@ export class CategoryPathForm implements OnInit {
     const items = [...this.selectedCategories()];
     [items[index - 1], items[index]] = [items[index], items[index - 1]];
     this.selectedCategories.set(items);
-    this.form.patchValue({ category_ids: items.map((c) => c.id) });
+    this.form.patchValue({ categoryIds: items.map((c) => c.id) });
   }
 
   moveDown(index: number): void {
@@ -122,7 +120,7 @@ export class CategoryPathForm implements OnInit {
     if (index === items.length - 1) return;
     [items[index], items[index + 1]] = [items[index + 1], items[index]];
     this.selectedCategories.set(items);
-    this.form.patchValue({ category_ids: items.map((c) => c.id) });
+    this.form.patchValue({ categoryIds: items.map((c) => c.id) });
   }
 
   onSubmit(): void {
@@ -135,7 +133,7 @@ export class CategoryPathForm implements OnInit {
     this.serverError.set(null);
 
     const values: CategoryPathFormValues = {
-      category_ids: this.selectedCategories().map((c) => c.id),
+      categoryIds: this.selectedCategories().map((c) => c.id),
     };
 
     this.save.emit(values);

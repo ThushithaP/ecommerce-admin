@@ -9,10 +9,12 @@ import { InputText } from "primeng/inputtext";
 import { DataTable } from "@shared/components/data-table/data-table";
 import { GoodsReceiptFormValues, GoodsReceipts } from './dto';
 import { GoodsReceiptService } from './services/goods-receipt.service';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-goods-receipt',
-  imports: [Button, IconField, InputIcon, InputText, DataTable],
+  imports: [BreadcrumbModule, Button, IconField, InputIcon, InputText, DataTable],
   templateUrl: './goods-receipt.html',
   styleUrl: './goods-receipt.css',
 })
@@ -20,6 +22,9 @@ export class GoodsReceipt extends BaseRoutedCrudPage<GoodsReceipts, GoodsReceipt
   protected readonly basePath = 'admin/procurement/goods-receipt/manage';
   protected readonly service = inject(GoodsReceiptService);
   protected readonly entityLabel = 'Goods Receipt';
+
+  items: MenuItem[] = [{ icon: 'pi pi-inbox', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<GoodsReceipts>[] = [
     { key: 'receiptNo', label: 'Receipt No', sortable: true },

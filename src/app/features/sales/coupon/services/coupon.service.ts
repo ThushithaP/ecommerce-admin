@@ -32,6 +32,7 @@ export class CouponService implements CrudService<Coupons, CouponPayload> {
       catchError((err) => handleError(err))
     );
   }
+  
   create(payload: CouponPayload): Observable<Coupons> {
     return this.http.post<Coupons>(`${this.apiUrl}/`, payload).pipe(
       tap(),

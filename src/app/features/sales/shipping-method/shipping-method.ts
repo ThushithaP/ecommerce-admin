@@ -11,16 +11,21 @@ import { InputText } from "primeng/inputtext";
 import { Dialog } from "primeng/dialog";
 import { ShippingMethodForm } from "./shipping-method-form/shipping-method-form";
 import { DataTable } from "@shared/components/data-table/data-table";
+import { Breadcrumb } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-shipping-method',
-  imports: [Button, IconField, InputIcon, InputText, Dialog, ShippingMethodForm, DataTable],
+  imports: [Button, IconField, InputIcon, InputText, Dialog, ShippingMethodForm, DataTable, Breadcrumb],
   templateUrl: './shipping-method.html',
   styleUrl: './shipping-method.css',
 })
 export class ShippingMethod extends BaseModalCrudPage<ShippingMethods,ShippingMethodFormValues> {
   protected readonly service = inject(ShippngMethodService);
   protected readonly entityLabel = 'Shipping Method';
+
+  items: MenuItem[] = [{ icon: 'pi pi-truck', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<ShippingMethods>[] = [
     { key: 'name', label: 'Name', sortable: true },

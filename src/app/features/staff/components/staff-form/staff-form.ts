@@ -1,7 +1,7 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Role } from '@features/rbac/roles/dto';
-import { RoleService } from '@features/rbac/roles/service/role.service';
+import { Roles } from '@features/rbac/role/dto';
+import { RoleService } from '@features/rbac/role/service/role.service';
 import { InputText } from "primeng/inputtext";
 import { Select } from "primeng/select";
 import { DatePicker } from "primeng/datepicker";
@@ -29,7 +29,7 @@ export class StaffForm {
   mode = input<FormMode>('create');
   record = input<Staffs | null>(null)
 
-  readonly roles = signal<Role[]>([]);
+  readonly roles = signal<Roles[]>([]);
   readonly submitting = signal(false);
   readonly serverError = signal<string | null>(null);
 
@@ -85,7 +85,7 @@ export class StaffForm {
   }
 
   fetchRoles() {
-    this.roleService.list({ isActive: true }).subscribe({
+    this.roleService.list({ search:'', page: 0, pageSize: 20, ordering: '' }).subscribe({
       next: ((res) => {
         this.roles.set(res.results);
       }),

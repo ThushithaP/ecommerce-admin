@@ -2,7 +2,7 @@
     <div class="mb-5">
         <label for="role" class="block mb-2 font-medium">Module</label>
         <p-select inputId="module" formControlName="module" [options]="modules()" optionLabel="name" optionValue="id"
-            [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Module" class="w-full" />
+            [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Module" class="w-full" (onFilter)="onModuleFilter($event)"/>
 
         @if (f.module.touched && f.module.invalid) {
         <small class="text-red-500">

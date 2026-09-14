@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<p-dialog [header]="dialogHeader()" [modal]="true" [(visible)]="visible" [style]="{ width: '45rem' }">
+<p-dialog [header]="dialogHeader()" [modal]="true" [(visible)]="visible" [maximizable]="true" [style]="{ width: '45rem' }">
     <app-warehouse-form
         (cancel)="visible = false"
         [record]="selectedRecord()"

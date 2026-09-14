@@ -1,10 +1,9 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
-import { BaseModalFormComponent } from '@shared/base/form/base-modal-form.component';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, effect, inject, input, OnInit, output, signal } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '@shared/components/form-field/form-field';
 import { getFieldError } from '@shared/utills/form-errors';
 import { InputText } from 'primeng/inputtext';
-import { Select } from 'primeng/select';
+import { Select, SelectFilterEvent } from 'primeng/select';
 import { DatePicker } from 'primeng/datepicker';
 import { Button } from 'primeng/button';
 import { ToggleSwitch } from 'primeng/toggleswitch';
@@ -20,6 +19,8 @@ import { ProductVariants } from '@features/catalog/product/dto';
 
 import { Promotions, PromotionFormValues, PromotionPayload, PromotionRule, PromotionReward } from '../dto';
 import { FormMode } from '@shared/types';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PromotionService } from '../services/promotion.service';
 
 type RuleGroup = FormGroup<{
   id: FormControl<number | null>;
@@ -54,16 +55,23 @@ export class PromotionForm implements OnInit {
   save = output<PromotionPayload>();
   mode = input<FormMode>('create');
 
+  protected readonly fb = inject(FormBuilder);
   readonly submitting = signal(false);
+  private route = inject(ActivatedRoute);
 
   private readonly categoryService = inject(CategoryService);
   private readonly brandService = inject(BrandService);
   private readonly productService = inject(ProductService);
+  private readonly service = inject(PromotionService);
 
   readonly categories = signal<Categories[]>([]);
   readonly brands = signal<Brands[]>([]);
   readonly products = signal<Products[]>([]);
   readonly variants = signal<ProductVariants[]>([]);
+
+  readonly record = signal<Promotions | null>(null);
+
+  readonly id = signal<number | null>(null)
 
   readonly typeOptions: SelectOption[] = [
     { value: 'percentage', name: 'Percentage Discount' },
@@ -81,13 +89,12 @@ export class PromotionForm implements OnInit {
     { value: 'fixed', name: 'Fixed' },
   ];
 
-  protected readonly fb = inject(FormBuilder);
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     type: ['', [Validators.required]],
     priority: [0, [Validators.required]],
-    start_date: [null as Date | null, [Validators.required]],
-    end_date: [null as Date | null, [Validators.required]],
+    startDate: [null as Date | null, [Validators.required]],
+    endDate: [null as Date | null, [Validators.required]],
     is_active: [true],
     rules: this.fb.array<RuleGroup>([]),
     rewards: this.fb.array<RewardGroup>([]),
@@ -105,7 +112,7 @@ export class PromotionForm implements OnInit {
     return this.form.controls.rewards;
   }
 
-  getError(control: any) {
+  getError(control: AbstractControl) {
     return getFieldError(control);
   }
 
@@ -150,26 +157,60 @@ export class PromotionForm implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchLookups();
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.id.set(Number(idParam));
+      this.loadPromotion(Number(idParam));
+    } else {
+      // this.addItem();   // start with one empty row for create mode
+    }
   }
 
-  fetchLookups(): void {
-    this.categoryService.list({ page: 0, pageSize: 100, search: '', ordering: 'name', })
-      .subscribe({ next: (res) => this.categories.set(res.results) });
+  onCategoryFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.categoryService.list({ search, page: 0, pageSize: 20, ordering: ''}).subscribe(response => 
+      this.categories.set(response.results)
+    );
+  }
+  
+  onBrandFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.brandService.list({ search, page: 0, pageSize: 20, ordering: ''}).subscribe(response => 
+      this.brands.set(response.results)
+    );
+  }
+  onProductFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.productService.list({ search, page: 0, pageSize: 20, ordering: ''}).subscribe(response => 
+      this.products.set(response.results)
+    );
+  }
+  onProductVariantFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.productService.listProductVariants({ search, page: 0, pageSize: 20, ordering: ''}).subscribe(response => 
+      this.variants.set(response.results)
+    );
+  }
 
-    this.brandService.list({ page: 0, pageSize: 100, search: '', ordering: 'name', })
-      .subscribe({ next: (res) => this.brands.set(res.results) });
+  private fetchLookups(categoryIds:number[],brandIds:number[],productIds:number[],variantIds:number[]): void {
+    if (categoryIds.length) {
+      this.categoryService.getByIds(categoryIds).subscribe({ next: (res) => this.categories.set(res.results) });
+    }
+    if (brandIds.length) {
+      this.brandService.getByIds(brandIds).subscribe({ next: (res) => this.brands.set(res.results) });
+    }
+    if (productIds.length) {
+      this.productService.getProductByIds(productIds).subscribe({ next: (res) => this.products.set(res.results) });
+    }
+    if (variantIds.length) {
+      this.productService.getProductVarintByIds(variantIds).subscribe({ next: (res) => this.variants.set(res.results) });
+    }
 
-    this.productService.list({ page: 0, pageSize: 100, search: '', ordering: 'name', filters: {} })
-      .subscribe({ next: (res) => this.products.set(res.results) });
-
-    this.productService.listProductVariants({ page: 0, pageSize: 200, search: '', ordering: 'sku', filters: {} })
-      .subscribe({ next: (res) => this.variants.set(res.results) });
   }
 
   protected emptyValues(): PromotionFormValues {
     return {
-      name: '', type: '', priority: 0, start_date: null, end_date: null, is_active: true,
+      name: '', type: '', priority: 0, startDate: null, endDate: null, is_active: true,
       rules: [], rewards: [],
     };
   }
@@ -179,8 +220,8 @@ export class PromotionForm implements OnInit {
       name: record.name,
       type: record.type,
       priority: record.priority,
-      start_date: new Date(record.start_date),
-      end_date: new Date(record.end_date),
+      startDate: new Date(record.startDate),
+      endDate: new Date(record.endDate),
       is_active: record.is_active,
       rules: record.rules,
       rewards: record.rewards,
@@ -190,23 +231,39 @@ export class PromotionForm implements OnInit {
   resetForm(onCancel: boolean): void {
     // super.resetForm(onCancel);
 
-    // const record = this.record();
-    // const values = record && !onCancel ? this.recordToValues(record) : this.emptyValues();
+    const record = this.record();
+    if(record != null) {
+      const categoryIds = [...new Set(record.rules.map(rule => rule.category).filter((id): id is number => id !== null))];
+      const brandIds = [...new Set(record.rules.map(rule => rule.brand).filter((id): id is number => id !== null))];
+      const productIds = [...new Set(record.rules.map(rule => rule.product).filter((id): id is number => id !== null))];
+      const variantIds = [...new Set(record.rules.map(rule => rule.variant).filter((id): id is number => id !== null))];
 
-    // this.rulesArray.clear();
-    // values.rules.forEach((rule) => this.rulesArray.push(this.createRule(rule)));
+      this.fetchLookups(categoryIds,brandIds,productIds,variantIds);
+    }
+    
+    if (record && !onCancel) {
+      this.form.reset(this.recordToValues(record));
+    } else {
+      this.form.reset(this.emptyValues());
+    }
 
-    // this.rewardsArray.clear();
-    // values.rewards.forEach((reward) => this.rewardsArray.push(this.createReward(reward)));
+    const values = record && !onCancel ? this.recordToValues(record) : this.emptyValues();
+
+    this.rulesArray.clear();
+    values.rules.forEach((rule) => this.rulesArray.push(this.createRule(rule)));
+
+    this.rewardsArray.clear();
+    values.rewards.forEach((reward) => this.rewardsArray.push(this.createReward(reward)));
   }
+  
 
   protected toPayload(raw: PromotionFormValues): PromotionPayload {
     return {
       name: raw.name,
       type: raw.type,
       priority: raw.priority,
-      start_date: raw.start_date ? raw.start_date.toISOString() : null,
-      end_date: raw.end_date ? raw.end_date.toISOString() : null,
+      startDate: raw.startDate ? raw.startDate.toISOString() : null,
+      endDate: raw.endDate ? raw.endDate.toISOString() : null,
       is_active: raw.is_active,
       rules: this.rulesArray.getRawValue().map((r) => ({
         id: r.id ?? undefined,
@@ -229,6 +286,32 @@ export class PromotionForm implements OnInit {
     };
   }
 
+  loadPromotion(id: number): void {
+    this.service.getById(id).subscribe({
+      next: (promo) => {
+        this.record.set(promo);
+        this.resetForm(false);
+        this.applyDisabledStateToArrays();
+      },
+      error: () => {
+
+      }
+    })
+  }
+
+  private applyDisabledStateToArrays(): void {
+    const shouldDisable = this.mode() === 'view';
+    shouldDisable ? this.form.disable() : this.form.enable();
+    shouldDisable ? this.rulesArray.disable() : this.rulesArray.enable();
+    shouldDisable ? this.rewardsArray.disable() : this.rewardsArray.enable();
+  }
+
+  constructor() {
+    effect(() => {
+      this.applyDisabledStateToArrays();
+    })
+  }
+
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -242,6 +325,6 @@ export class PromotionForm implements OnInit {
   }
 
   onCancel(): void {
-
+    this.cancel.emit();
   }
 }

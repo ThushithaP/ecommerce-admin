@@ -58,6 +58,13 @@ export class ProductService implements CrudService<Products, ProductFormValues> 
     );
   }
 
+  getProductByIds(ids: number[]): Observable<PaginatedResponse<Products>> {
+    const params = new HttpParams().set('ids', ids.join(','));
+    return this.http.get<PaginatedResponse<Products>>(this.apiUrl, { params }).pipe(
+      catchError((err) => handleError(err))
+    );
+  }
+
   getAttributeSchema(categoryIds: number[]): Observable<AttributeSchema[]> {
     return this.http.post<AttributeSchema[]>(`${this.apiUrl}/attribute-schema/`, { categoryIds }).pipe(
       catchError((err) => handleError(err))
@@ -84,7 +91,7 @@ export class ProductService implements CrudService<Products, ProductFormValues> 
       catchError((err) => handleError(err))
     );
   }
-
+  
   getProductVarintByIds(ids: number[]): Observable<PaginatedResponse<ProductVariants>> {
     const params = new HttpParams().set('ids', ids.join(','));
     return this.http.get<PaginatedResponse<ProductVariants>>(this.apiUrlVariants, { params }).pipe(

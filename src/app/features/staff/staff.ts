@@ -57,6 +57,8 @@ export class Staff {
   columns: TableColumn<Staffs>[] = [
     { key: 'name', label: 'Name', sortable: true },
     { key: 'emp_no', label: 'Emp No', sortable: true },
+    { key: 'email', label: 'Email', sortable: true },
+    { key: 'phone', label: 'Phone', sortable: true },
     { key: 'is_active', label: 'Status', type: 'boolean', },
     { key: 'updated_at', label: 'Last Modified', type: 'date', formatter: formatDateTime },
   ];

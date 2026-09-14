@@ -4,8 +4,8 @@ import { Signup } from './features/auth/signup/signup';
 import { Dashboard } from './features/dashboard/dashboard';
 import { MainLayout } from './core/layouts/main-layout/main-layout';
 import { AuthLayout } from './core/layouts/auth-layout/auth-layout';
-import { Roles } from './features/rbac/roles/roles';
-import { Modules } from './features/rbac/modules/modules';
+import { Role } from './features/rbac/role/role';
+import { Module } from './features/rbac/modules/module';
 import { Permissions } from './features/rbac/permissions/permissions';
 import { RolesPermissions } from '@features/rbac/roles-permissions/roles-permissions';
 import { permissionGuard } from '@core/guard/permission-guard';
@@ -40,10 +40,10 @@ export const routes: Routes = [
                 path: 'rbac',
                 children: [
                     {
-                        path: 'roles', component: Roles,
+                        path: 'roles', component: Role,
                     },
                     {
-                        path: 'modules', component: Modules,
+                        path: 'modules', component: Module,
                     },
                     {
                         path: 'permissions', component: Permissions,
@@ -221,12 +221,20 @@ export const routes: Routes = [
                         loadComponent: () => import('@features/sales/promotion/promotion').then(m => m.Promotion),
                     },
                     {
-                        path: 'promotion/:action/:id',
+                        path: 'promotion/manage/:action',
+                        loadComponent: () => import('@features/sales/promotion/pages/manage/manage').then(m => m.Manage),
+                    },
+                    {
+                        path: 'promotion/manage/:action/:id',
                         loadComponent: () => import('@features/sales/promotion/pages/manage/manage').then(m => m.Manage),
                     },
                     {
                         path: 'coupon',
                         loadComponent: () => import('@features/sales/coupon/coupon').then(m => m.Coupon),
+                    },
+                    {
+                        path: 'tax-class',
+                        loadComponent: () => import('@features/sales/tax-class/tax-class').then(m => m.TaxClass),
                     },
                 ]
             },

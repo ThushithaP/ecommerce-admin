@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '@shared/components/form-field/form-field';
-import { Select } from 'primeng/select';
+import { Select, SelectFilterEvent } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { Button } from 'primeng/button';
@@ -11,8 +11,8 @@ import { BrandService } from '@features/catalog/brand/services/brand.service';
 import { Brands } from '@features/catalog/brand/dto';
 import { CategoryPathService } from '@features/catalog/category-path/services/category-path.service';
 import { CategoriesPath } from '@features/catalog/category-path/dto';
-// import { TaxClassService } from '@features/tax/services/tax-class.service';
-// import { TaxClasses } from '@features/tax/dto';
+import { TaxClassService } from '@features/sales/tax-class/services/tax-class.service';
+import { TaxClasses } from '@features/sales/tax-class/dto';
 import { ProductService } from '../../services/product.service';
 import { AttributeSchema, Image, ProductFormValues, ProductImageInput, Products } from '../../dto';
 import { CommonModule } from '@angular/common';
@@ -52,7 +52,7 @@ export class ProductForm implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly brandService = inject(BrandService);
   private readonly categoryPathService = inject(CategoryPathService);
-  // private readonly taxClassService = inject(TaxClassService);
+  private readonly taxClassService = inject(TaxClassService);
   private readonly productService = inject(ProductService);
 
   private readonly route = inject(ActivatedRoute);
@@ -60,7 +60,7 @@ export class ProductForm implements OnInit {
 
   readonly brands = signal<Brands[]>([]);
   readonly categoryPaths = signal<CategoriesPath[]>([]);
-  // readonly taxClasses = signal<TaxClasses[]>([]);
+  readonly taxClasses = signal<TaxClasses[]>([]);
   readonly attributeSchema = signal<AttributeSchema[]>([]);
   readonly submitting = signal(false);
 
@@ -174,6 +174,12 @@ export class ProductForm implements OnInit {
       .subscribe({ next: (res) => this.categoryPaths.set(res.results) });
   }
 
+  onTaxClsssFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.taxClassService.list({ search, page: 0, pageSize: 20, ordering: ''}).subscribe(response => 
+      this.taxClasses.set(response.results)
+    );
+  }
   // fetchTaxClasses(): void {
   //   this.taxClassService.list({ page: 0, pageSize: 100, search: '', ordering: 'name', filters: {} })
   //     .subscribe({ next: (res) => this.taxClasses.set(res.results) });

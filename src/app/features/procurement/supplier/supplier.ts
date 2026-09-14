@@ -6,13 +6,15 @@ import { Button } from "primeng/button";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { InputText } from "primeng/inputtext";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 import { TableAction, TableColumn } from '@shared/models/table-column.model';
 import { formatDateTime } from '@shared/utills';
 import { DataTable } from "@shared/components/data-table/data-table";
 
 @Component({
   selector: 'app-supplier',
-  imports: [Button, IconField, InputIcon, InputText, DataTable],
+  imports: [BreadcrumbModule, Button, IconField, InputIcon, InputText, DataTable],
   templateUrl: './supplier.html',
   styleUrl: './supplier.css',
 })
@@ -20,6 +22,9 @@ export class Supplier extends BaseRoutedCrudPage<Suppliers, SupplierFormValues> 
   protected readonly basePath = 'admin/procurement/supplier/manage';
   protected readonly service = inject(SupplierService);
   protected readonly entityLabel = 'Supplier';
+
+  items: MenuItem[] = [{ icon: 'pi pi-truck', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<Suppliers>[] = [
     { key: 'supplierCode', label: 'Supplier Code', sortable: true },

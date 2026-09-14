@@ -38,7 +38,7 @@
   <div class="flex justify-end gap-2 mt-6">
     <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'" />
     @if (mode() !== 'view') {
-    <p-button raised severity="info" label="Save Coupon" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+    <p-button raised severity="info" label="Save" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
     }
   </div>
 </form>

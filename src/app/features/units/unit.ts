@@ -6,6 +6,8 @@ import { SelectModule } from 'primeng/select';
 import { formatDateTime } from '@shared/utills';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 import { DataTable } from '@shared/components/data-table/data-table';
 import { TableAction, TableColumn } from '@shared/models/table-column.model';
 import { UnitFormValues, Units } from './dto';
@@ -15,13 +17,16 @@ import { BaseModalCrudPage } from '@shared/base/pages/base-modal-crud-page.compo
 
 @Component({
   selector: 'app-units',
-  imports: [ButtonModule, DialogModule, InputTextModule, SelectModule, IconField, InputIcon, DataTable, UnitForm],
+  imports: [BreadcrumbModule, ButtonModule, DialogModule, InputTextModule, SelectModule, IconField, InputIcon, DataTable, UnitForm],
   templateUrl: './unit.html',
   styleUrl: './unit.css',
 })
-export class Unit extends BaseModalCrudPage<Units,UnitFormValues>{
+export class Unit extends BaseModalCrudPage<Units, UnitFormValues> {
   protected readonly service = inject(UnitService);
   protected readonly entityLabel = 'Unit';
+
+  items: MenuItem[] = [{ icon: 'pi pi-calculator', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<Units>[] = [
     { key: 'name', label: 'Unit Name', sortable: true },

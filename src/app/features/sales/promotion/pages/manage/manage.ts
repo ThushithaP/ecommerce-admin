@@ -19,11 +19,11 @@ export class Manage implements OnInit {
   private router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   readonly mode = signal<FormMode>('create');
-  readonly id = signal<string | null>(null);
+  readonly id = signal<number | null>(null);
 
   ngOnInit(): void {
     const actionParam = this.route.snapshot.paramMap.get('action');
-    this.id.set(this.route.snapshot.paramMap.get('id'));
+    this.id.set(Number(this.route.snapshot.paramMap.get('id')));
     if (actionParam === 'view') {
       this.mode.set('view');
     }
@@ -34,7 +34,6 @@ export class Manage implements OnInit {
       this.mode.set('create');
     }
   }
-
 
   save(values: PromotionPayload): void {
     const request$ = this.mode() === 'edit'
@@ -50,5 +49,9 @@ export class Manage implements OnInit {
         this.toast.error('Failed to save supplier.');
       },
     });
+  }
+
+  cancel():void {
+    this.router.navigate(['admin/sales/promotion']);
   }
 }

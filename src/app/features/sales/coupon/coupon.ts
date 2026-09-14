@@ -11,16 +11,21 @@ import { InputText } from "primeng/inputtext";
 import { Dialog } from "primeng/dialog";
 import { CouponForm } from "./coupon-form/coupon-form";
 import { DataTable } from "@shared/components/data-table/data-table";
+import { Breadcrumb } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-coupon',
-  imports: [Button, IconField, InputIcon, InputText, Dialog, CouponForm, DataTable],
+  imports: [Button, IconField, InputIcon, InputText, Dialog, CouponForm, DataTable, Breadcrumb],
   templateUrl: './coupon.html',
   styleUrl: './coupon.css',
 })
 export class Coupon extends BaseModalCrudPage<Coupons, CouponPayload> {
   protected readonly service = inject(CouponService);
   protected readonly entityLabel = 'Coupon';
+
+  items: MenuItem[] = [{ icon: 'pi pi-ticket', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<Coupons>[] = [
     { key: 'code', label: 'Code', sortable: true },

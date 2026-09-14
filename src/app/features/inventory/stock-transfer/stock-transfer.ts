@@ -11,16 +11,21 @@ import { InputText } from "primeng/inputtext";
 import { Dialog } from "primeng/dialog";
 import { StockTransferForm } from "./stock-transfer-form/stock-transfer-form";
 import { DataTable } from "@shared/components/data-table/data-table";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-stock-transfer',
-  imports: [Button, IconField, InputIcon, InputText, Dialog, StockTransferForm, DataTable],
+  imports: [BreadcrumbModule, Button, IconField, InputIcon, InputText, Dialog, StockTransferForm, DataTable],
   templateUrl: './stock-transfer.html',
   styleUrl: './stock-transfer.css',
 })
 export class StockTransfer extends BaseModalCrudPage<StockTransfers, StockTransferFormValues> {
   protected readonly service = inject(StockTransferService);
   protected readonly entityLabel = 'Stock Transfer';
+
+  items: MenuItem[] = [{ icon: 'pi pi-list', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<StockTransfers>[] = [
     { key: 'transferNo', label: 'Transfer No', sortable: true },

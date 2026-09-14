@@ -8,6 +8,8 @@ import { Dialog } from "primeng/dialog";
 import { ButtonModule } from "primeng/button";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 import { DataTable } from "@shared/components/data-table/data-table";
 import { AttributeDefinitionForm } from "./components/attribute-definition-form/attribute-definition-form";
 import { InputTextModule } from 'primeng/inputtext';
@@ -15,7 +17,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-attribute-definition',
-  imports: [Dialog, ButtonModule, IconField, InputIcon, DataTable,InputTextModule, AttributeDefinitionForm],
+  imports: [BreadcrumbModule, Dialog, ButtonModule, IconField, InputIcon, DataTable,InputTextModule, AttributeDefinitionForm],
   templateUrl: './attribute-definition.html',
   styleUrl: './attribute-definition.css',
 })
@@ -23,6 +25,9 @@ export class AttributeDefinition extends BaseModalCrudPage<AttributeDefinitions,
   protected readonly service = inject(AttributeDefinitionService);
   protected readonly entityLabel = 'Attribute Definition';
   private router = inject(Router);
+
+  items: MenuItem[] = [{ icon: 'pi pi-sliders-h', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<AttributeDefinitions>[] = [
     { key: 'label', label: 'Label', sortable: true },

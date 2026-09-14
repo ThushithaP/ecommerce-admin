@@ -3,68 +3,66 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { catchError, Observable, tap } from 'rxjs';
 import { handleError } from '@shared/utills';
-import { PaginatedResponse } from '@shared/interfaces';
-import { BrandListParams, Brands, CreateBrandDto, UpdateBrandDto } from '../dto';
+import { ListParams, PaginatedResponse } from '@shared/interfaces';
+import { BrandFormValues, Brands } from '../dto';
+import { CrudService } from '@shared/base/pages/base-list-page.component';
 
 
 @Injectable({
   providedIn: 'root',
 })
-export class BrandService {
-   private readonly http = inject(HttpClient);
+export class BrandService implements CrudService<Brands, BrandFormValues> {
+  private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/catalog/brand`
 
-  create(payload:CreateBrandDto) {
-    return this.http.post(`${this.apiUrl}/`,payload).pipe(
+  list(params: ListParams): Observable<PaginatedResponse<Brands>> {
+    let httpParams = new HttpParams()
+      .set('page', params.page + 1)
+      .set('page_size', params.pageSize)
+      .set('search', params.search)
+      .set('ordering', params.ordering);
+
+    for (const [key, value] of Object.entries(params.filters ?? {})) {
+      if (value !== null && value !== undefined && value !== '') {
+        httpParams = httpParams.set(key, value);
+      }
+    }
+
+    return this.http.get<PaginatedResponse<Brands>>(`${this.apiUrl}/`, { params: httpParams }).pipe(
       tap(),
       catchError((err) => handleError(err))
-    ) 
+    );
+  }
+  create(payload: BrandFormValues): Observable<Brands> {
+    return this.http.post<Brands>(`${this.apiUrl}/`, payload).pipe(
+      tap(),
+      catchError((err) => handleError(err))
+    )
   }
 
-  list(params_:BrandListParams ={}):Observable<PaginatedResponse<Brands>> {
-    let params = new HttpParams();
-    if (params_.page !== undefined) {
-      params = params.set('page', params_.page + 1);
-    }
-
-    if (params_.pageSize !== undefined) {
-      params = params.set('page_size', params_.pageSize);
-    }
-
-    if (params_.isActive !== undefined) {
-      params = params.set('is_active', params_.isActive);
-    }
-
-    if (params_.search) {
-      params = params.set('search', params_.search);
-    }
-
-    if (params_.ordering) {
-      params = params.set('ordering', params_.ordering);
-    }
-
-    return this.http.get<PaginatedResponse<Brands>>(`${this.apiUrl}/`,{params}).pipe(
+  update(id: any, payload: BrandFormValues): Observable<Brands> {
+    return this.http.patch<Brands>(`${this.apiUrl}/${id}/`, payload).pipe(
       tap(),
       catchError((err) => handleError(err))
     );
   }
 
-  getById(id:number): Observable<Brands> {
+  delete?(id: any): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}/`).pipe(
+      tap(),
+      catchError((err) => handleError(err))
+    );
+  }
+
+  getById?(id: any): Observable<Brands> {
     return this.http.get<Brands>(`${this.apiUrl}/${id}/`).pipe(
       catchError((err) => handleError(err))
     );
   }
 
-  update(id:number, payload: UpdateBrandDto): Observable<Brands> {
-    return this.http.patch<Brands>(`${this.apiUrl}/${id}/`,payload).pipe(
-      tap(),
-      catchError((err) => handleError(err))
-    );
-  }
-
-  delete(id:number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}/`).pipe(
-      tap(),
+  getByIds(ids: number[]): Observable<PaginatedResponse<Brands>> {
+    const params = new HttpParams().set('ids', ids.join(','));
+    return this.http.get<PaginatedResponse<Brands>>(this.apiUrl, { params }).pipe(
       catchError((err) => handleError(err))
     );
   }

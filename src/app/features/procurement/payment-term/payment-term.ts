@@ -10,16 +10,21 @@ import { Button } from "primeng/button";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
 import { InputText } from "primeng/inputtext";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-payment-term',
-  imports: [Dialog, PaymentTermForm, DataTable, Button, IconField, InputIcon, InputText],
+  imports: [BreadcrumbModule, Dialog, PaymentTermForm, DataTable, Button, IconField, InputIcon, InputText],
   templateUrl: './payment-term.html',
   styleUrl: './payment-term.css',
 })
 export class PaymentTerm extends BaseModalCrudPage<PaymentTerms, PaymentTermFormValues> {
   protected readonly service = inject(PayementTermService);
   protected readonly entityLabel = 'Payment Term';
+
+  items: MenuItem[] = [{ icon: 'pi pi-credit-card', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
 
   columns: TableColumn<PaymentTerms>[] = [
     { key: 'name', label: 'Name', sortable: true },

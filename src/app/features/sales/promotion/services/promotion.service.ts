@@ -40,15 +40,20 @@ export class PromotionService implements CrudService<Promotions, PromotionPayloa
     )
   }
 
-  update(id: any, values: PromotionPayload): Observable<Promotions> {
-    throw new Error('Method not implemented.');
+  update(id: number, payload: PromotionPayload): Observable<Promotions> {
+    return this.http.patch<Promotions>(`${this.apiUrl}/${id}/`, payload).pipe(
+      tap(),
+      catchError((err) => handleError(err))
+    );
   }
 
   delete?(id: any): Observable<void> {
     throw new Error('Method not implemented.');
   }
 
-  getById?(id: any): Observable<Promotions> {
-    throw new Error('Method not implemented.');
+  getById(id: number): Observable<Promotions> {
+    return this.http.get<Promotions>(`${this.apiUrl}/${id}/`).pipe(
+      catchError((err) => handleError(err))
+    );
   }
 }

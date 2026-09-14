@@ -76,18 +76,23 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
             },
             {
                 label: 'Promotion',
-                icon: 'pi pi-dollar',
+                icon: 'pi pi-megaphone',
                 route: 'sales/promotion',
             },
             {
                 label: 'Coupons',
-                icon: 'pi pi-dollar',
+                icon: 'pi pi-ticket',
                 route: 'sales/coupon',
             },
             {
                 label: 'Shipping Method',
                 icon: 'pi pi-truck',
                 route: 'sales/shipping-method',
+            },
+            {
+                label: 'Tax Class',
+                icon: 'pi pi-truck',
+                route: 'sales/tax-class',
             },
         ],
     },
@@ -170,17 +175,17 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
         items:[
             {
                 label:'Inventory',
-                icon:'pi pi-inbox',
+                icon:'pi pi-warehouse',
                 route:'inventory/inventory'
             },
             {
                 label:'Stock Adjustment',
-                icon:'pi pi-inbox',
+                icon:'pi pi-sliders-v',
                 route:'inventory/stock-adjustment'
             },
             {
                 label:'Stock Transfer',
-                icon:'pi pi-inbox',
+                icon:'pi pi-arrow-right-arrow-left',
                 route:'inventory/stock-transfer'
             },
         ]

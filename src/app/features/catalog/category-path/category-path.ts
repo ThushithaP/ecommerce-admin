@@ -13,15 +13,23 @@ import { DataTable } from "@shared/components/data-table/data-table";
 import { ToastService } from '@shared/services/toast/toast.service';
 import { CategoriesPath, CategoryPathFormValues } from './dto';
 import { CategoryPathService } from './services/category-path.service';
+import { Breadcrumb } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
+
 @Component({
   selector: 'app-category-path',
-  imports: [CategoryPathForm, DialogModule, DataTable, Button, IconField, InputIcon, InputText],
+  imports: [Breadcrumb, CategoryPathForm, DialogModule, DataTable, Button, IconField, InputIcon, InputText],
   templateUrl: './category-path.html',
   styleUrl: './category-path.css',
 })
 export class CategoryPath implements OnInit {
   private readonly categoryPathService = inject(CategoryPathService);
   private readonly toast = inject(ToastService);
+  protected readonly entityLabel = 'Category Path';
+
+  items: MenuItem[] = [{ icon: 'pi pi-share-alt', label: this.entityLabel }];
+  home: MenuItem = { icon: 'pi pi-home', routerLink: ['/admin/dashboard'] };
+
 
   visible: boolean = false;
   readonly dialogHeader = computed(() =>

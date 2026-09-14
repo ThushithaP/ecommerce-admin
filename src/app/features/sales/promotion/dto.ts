@@ -24,8 +24,8 @@ export interface Coupon {
   usageLimit: number | null;
   usageCount: number;
   customerLimit: number | null;
-  start_date: string;
-  end_date: string;
+  startDate: string;
+  endDate: string;
   is_active: boolean;
 }
 
@@ -34,8 +34,8 @@ export interface Promotions {
   name: string;
   type: 'percentage' | 'fixed' | 'free_product';
   priority: number;
-  start_date: string;
-  end_date: string;
+  startDate: string;
+  endDate: string;
   is_active: boolean;
   rules: PromotionRule[];
   rewards: PromotionReward[];
@@ -48,8 +48,8 @@ export interface PromotionFormValues {
   name: string;
   type: string;
   priority: number;
-  start_date: Date | null;
-  end_date: Date | null;
+  startDate: Date | null;
+  endDate: Date | null;
   is_active: boolean;
   rules: PromotionRule[];
   rewards: PromotionReward[];
@@ -59,8 +59,8 @@ export interface PromotionPayload {
   name: string;
   type: string;
   priority: number;
-  start_date: string | null;
-  end_date: string | null;
+  startDate: string | null;
+  endDate: string | null;
   is_active: boolean;
   rules: PromotionRule[];
   rewards: PromotionReward[];

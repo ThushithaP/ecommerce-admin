@@ -1,0 +1,69 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <div class="grid grid-cols-2 gap-4">
+    <app-form-field for="name" label="Tax Class Name" [required]="true" [error]="getError(f.name)">
+      <input id="name" pInputText class="w-full" formControlName="name" placeholder="e.g. Standard" autocomplete="off" />
+    </app-form-field>
+
+    <div class="flex flex-col items-start justify-center">
+      <label class="mb-2 text-sm font-medium">Active</label>
+      <p-toggleswitch formControlName="is_active" />
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <app-form-field for="description" label="Description">
+      <textarea pInputText class="w-full" formControlName="description"></textarea>
+    </app-form-field>
+  </div>
+
+  @if (mode() === 'create' && !record()) {
+    <p class="mt-6 text-sm text-surface-500">
+      Save the tax class first, then you can add specific rates (e.g. VAT, GST) below.
+    </p>
+  } @else {
+    <h6 class="mb-2 mt-6">Tax Rates</h6>
+    <div class="rounded-lg border border-surface-200">
+      @for (rate of ratesArray.controls; track $index; let i = $index) {
+        <div [formGroup]="rate" class="grid grid-cols-6 gap-2 items-end px-3 py-3 border-b border-surface-100">
+          <app-form-field [for]="'rateName-' + i" label="Name" [required]="true" [error]="getError(rate.controls.name)">
+            <input pInputText class="w-full" formControlName="name" placeholder="e.g. VAT" />
+          </app-form-field>
+
+          <app-form-field [for]="'rateValue-' + i" label="Rate (%)" [required]="true" [error]="getError(rate.controls.rate)">
+            <input pInputText type="number" class="w-full" formControlName="rate" />
+          </app-form-field>
+
+          <app-form-field [for]="'rateRegion-' + i" label="Region">
+            <input pInputText class="w-full" formControlName="region" placeholder="Blank = applies everywhere" />
+          </app-form-field>
+
+          <div class="flex flex-col items-center">
+            <label class="text-sm mb-1">Active</label>
+            <p-toggleswitch formControlName="is_active" />
+          </div>
+
+          @if (mode() !== 'view') {
+          <button type="button" class="text-sm text-white rounded-2xl bg-blue-500 py-1" [disabled]="savingRates()" (click)="saveRate(i)">
+            {{ rate.value.id ? 'Update' : 'Save' }}
+          </button>
+          <button type="button" class="text-red-500" (click)="removeRateAt(i)">✕ Remove</button>
+          }
+        </div>
+      } @empty {
+        <div class="p-4 text-center text-surface-500">No rates added yet.</div>
+      }
+    </div>
+
+    @if (mode() !== 'view') {
+    <p-button label="Add Rate" icon="pi pi-plus" type="button" (onClick)="addRate()" styleClass="mt-2" />
+    }
+  }
+
+  <div class="flex justify-end gap-2 mt-6">
+    <p-button severity="secondary" (click)="onCancel()" [label]="mode() === 'view' ? 'Close' : 'Cancel'" />
+    @if (mode() !== 'view') {
+    <p-button raised severity="info" label="Save Tax Class" type="submit" [loading]="submitting()" [disabled]="form.invalid || submitting()" />
+    }
+  </div>
+</form>
