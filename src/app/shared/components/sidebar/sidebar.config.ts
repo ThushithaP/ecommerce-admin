@@ -33,7 +33,7 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
             {
                 label: 'Dashboard',
                 icon: 'pi pi-home',
-                route: '/',
+                route: 'dashboard',
             },
         ],
     },

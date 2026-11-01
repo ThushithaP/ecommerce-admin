@@ -20,7 +20,7 @@ export class AuthService {
   private readonly _currentUser = signal<AuthUser | null>(null);
   readonly currentUser = this._currentUser.asReadonly();
   readonly isAuthenticated = computed(() => this._currentUser() !== null);
-
+  
   signup(payload: SignupPayload): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, payload).pipe(
       tap((res) => this.persistSession(res)),
@@ -48,8 +48,6 @@ export class AuthService {
       })
       .pipe(
         tap(() => { }),
-        // Map to a plain boolean for the validator; treat errors as "available"
-        // so a flaky endpoint never blocks a legitimate signup (handled via catchError upstream)
         (source) =>
           new Observable<boolean>((subscriber) => {
             source.subscribe({
@@ -62,7 +60,6 @@ export class AuthService {
   }
 
   signInWithGoogle(): void {
-    // Redirect-based OAuth flow; adjust to popup flow if using @abacritt/angularx-social-login
     const redirectUri = encodeURIComponent(`${window.location.origin}/auth/google/callback`);
     const scope = encodeURIComponent('openid email profile');
     const url =

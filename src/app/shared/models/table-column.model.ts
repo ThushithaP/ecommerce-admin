@@ -16,7 +16,7 @@ export interface TableAction<T = any> {
   label: string;
   icon?: string;
   tooltip?: string;
-  color?: 'primary' | 'danger' | 'warn' | 'default';
+  color?: 'primary' | 'danger' | 'warn' | 'green'| 'default';
   handler: (row: T) => void;
   visible?: (row: T) => boolean;   // conditionally show action per row
 }

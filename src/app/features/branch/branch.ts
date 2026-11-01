@@ -37,11 +37,11 @@ export class Branch extends BaseModalCrudPage<Branches, BranchFormValues> {
 
   actions: TableAction<Branches>[] = [
     { label: '', tooltip: 'View', color: 'primary', icon: 'pi pi-eye', handler: (row) => this.view(row) },
-    { label: '', tooltip: 'Edit', color: 'warn', icon: 'pi pi-pencil', handler: (row) => this.edit(row) },
+    { label: '', tooltip: 'Edit', color: 'green', icon: 'pi pi-pencil', handler: (row) => this.edit(row) },
     { label: '', tooltip: 'Delete', color: 'danger', icon: 'pi pi-trash', handler: (row) => this.delete(row) },
   ];
 
   onStatusFilterChange(status: string | null): void {
-    this.updateFilters({ status });   // merges into filters signal + refetches
+    this.updateFilters({ status });   
   }
 }

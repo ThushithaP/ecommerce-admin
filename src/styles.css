@@ -1,8 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
 @import "primeicons/primeicons.css";
 @import "./styles/token.css";
+/* @import "./styles/old_token.css"; */
 @import "./styles/forms.css";
 
 
@@ -10,6 +9,14 @@
   color: white !important;
   font-size: 0.75rem !important;
   padding: 0.375rem 0.625rem !important;
+}
+
+.bg-emerald-900 {
+  background-color: #2D1B69 !important;
+}
+
+.bg-emerald-900:hover {
+  background-color: #7B2FF7 !important;
 }
 
 /* .p-drawer-header {

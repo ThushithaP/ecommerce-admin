@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Button } from "primeng/button";
 import { AvatarModule } from 'primeng/avatar';
 import { MenuItem } from 'primeng/api';
@@ -6,25 +6,31 @@ import { Router } from '@angular/router';
 import { MenuModule } from 'primeng/menu';
 import { AuthService } from '@core/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { InputText } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-navbar',
-  imports: [Button, AvatarModule, MenuModule,CommonModule],
+  imports: [Button, AvatarModule, MenuModule, CommonModule, InputText],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css',
+  styleUrl: './navbar.scss',
 })
-export class Navbar {
+export class Navbar  {
   readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   
   readonly currentUser = this.authService.currentUser;
   @Output()
   toggleSidebar = new EventEmitter<void>();
+  
+  // ngOnInit(): void {
+  //   console.log(this.currentUser());
+    
+  // }
 
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
   }
-
+  
   openProfile() {
     this.router.navigate(['/admin/profile']);
   }

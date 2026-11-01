@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaAsset } from '@shared/services/media/media.service';
 import { FormMode } from '@shared/types';
+import { forkJoin, of } from 'rxjs';
 
 type SpecControlGroup = FormGroup<{
   attribute: FormControl<number>;
@@ -139,11 +140,7 @@ export class ProductForm implements OnInit {
     }) as VariantFormGroup;
   }
 
-  ngOnInit(): void {
-    this.fetchBrands();
-    this.fetchCategoryPaths();
-    // this.fetchTaxClasses();
-        
+  ngOnInit(): void {        
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.productId.set(Number(idParam));
@@ -164,26 +161,27 @@ export class ProductForm implements OnInit {
     shouldDisable ? this.attributeValuesArray.disable() : this.attributeValuesArray.enable();
   }
 
-  fetchBrands(): void {
-    this.brandService.list({ page: 0, pageSize: 100, search: '', ordering: 'name', })
-      .subscribe({ next: (res) => this.brands.set(res.results) });
+  onBrandsFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.brandService.list({ search, page: 0, pageSize: 20, ordering: ''}).subscribe(response => 
+      this.brands.set(response.results)
+    );
   }
 
-  fetchCategoryPaths(): void {
-    this.categoryPathService.list({ pageSize: 100 })
-      .subscribe({ next: (res) => this.categoryPaths.set(res.results) });
+  onCategoryPathsFilter(event: SelectFilterEvent): void {
+    const search = event.filter ?? '';
+    this.categoryPathService.list({ search, page: 0, pageSize: 20, ordering: ''}).subscribe(response => 
+      this.categoryPaths.set(response.results)
+    );
   }
 
-  onTaxClsssFilter(event: SelectFilterEvent): void {
+  onTaxClassFilter(event: SelectFilterEvent): void {
     const search = event.filter ?? '';
     this.taxClassService.list({ search, page: 0, pageSize: 20, ordering: ''}).subscribe(response => 
       this.taxClasses.set(response.results)
     );
   }
-  // fetchTaxClasses(): void {
-  //   this.taxClassService.list({ page: 0, pageSize: 100, search: '', ordering: 'name', filters: {} })
-  //     .subscribe({ next: (res) => this.taxClasses.set(res.results) });
-  // }
+
 
   onCategoryPathSelected(path: CategoriesPath): void {
     const categoryIds = path.items.map((item) => item.category);
@@ -267,14 +265,38 @@ export class ProductForm implements OnInit {
     // emit / call service.create/update here, following your existing save() pattern
   }
 
+  fetchLookUp(product:Products,brandId:number | null,categortyPathId:number | null,taxId:number| null):void {
+    const brands$ = brandId != null ? this.brandService.getById(brandId) : of(null);
+    const categoryPath$ = categortyPathId != null ? this.categoryPathService.getById(categortyPathId) : of(null);
+    const taxClass$ = taxId != null ? this.taxClassService.getById(taxId) : of(null);
+
+    forkJoin({
+      brand:brands$, categoryPath:categoryPath$, taxClass:taxClass$
+    }).subscribe({
+      next:({brand,categoryPath,taxClass}) => {
+        if (brand) {
+        this.brands.set([brand]);
+      }
+      if (categoryPath) {
+        this.categoryPaths.set([categoryPath]);
+      }
+      if (taxClass) {
+        this.taxClasses.set([taxClass]);
+      }
+      this.populateForm(product);
+      }
+    })
+  }
+
   loadProduct(id: number): void {
     if (!this.productService.getById) {
       return;
     }
     this.productService.getById(id).subscribe({
       next: (product) => {
+        this.fetchLookUp(product,product.brand,product.categoryPath,product.taxClass);
         this.loadedProduct.set(product);
-        this.populateForm(product);
+        // this.populateForm(product);
       }
       // error: () => this.toast.error('Failed to load product.'),
     });
@@ -312,7 +334,7 @@ export class ProductForm implements OnInit {
       this.attributeValuesArray.clear();
       return;
     }
-
+    
     this.productService.getAttributeSchema(
       categoryIds
     ).subscribe({

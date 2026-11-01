@@ -127,3 +127,13 @@
   border-radius: 6px;
   font-size: 11px;
 }
+
+/* Action button color */
+.action-green {
+  color: #16a34a;
+}
+
+.action-green:hover {
+  color: #15803d;
+  background-color: #f0fdf4;
+}

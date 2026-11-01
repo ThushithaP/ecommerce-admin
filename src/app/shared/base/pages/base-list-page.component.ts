@@ -1,11 +1,8 @@
-// core/pages/base-list-page.component.ts
 import { Directive, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ToastService } from '@shared/services/toast/toast.service';
 import { PageEvent, SortEvent } from '@shared/models/table-column.model';
 import { ListParams, PaginatedResponse } from '@shared/interfaces';
-
-
 
 // export interface PagedResult<T> {
 //   results: T[];
@@ -20,10 +17,6 @@ export interface CrudService<TRecord, TFormValues> {
     getById?(id: any): Observable<TRecord>;
 }
 
-/**
- * Owns only data/list concerns: fetch, search, sort, paginate, filter, delete.
- * Says nothing about HOW add/edit/view are presented (modal vs routed page).
- */
 @Directive()
 export abstract class BaseListPage<TRecord extends { id: any }, TFormValues>
     implements OnInit, OnDestroy {

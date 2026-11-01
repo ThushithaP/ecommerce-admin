@@ -1,18 +1,3 @@
-// import { Component, Input } from '@angular/core';
-// import { RouterLink } from "@angular/router";
-// import { HasPermissionDirective } from '@shared/directives/has-permission.derective';
-
-// @Component({
-//   selector: 'app-sidebar',
-//   imports: [RouterLink,HasPermissionDirective],
-//   templateUrl: './sidebar.html',
-//   styleUrl: './sidebar.css',
-// })
-// export class Sidebar {
-//   @Input() 
-//   sidebarCollapsed:boolean=false;
-// }
-
 import { Component, computed, inject, input, Input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -34,10 +19,7 @@ import {
     styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-
     // private readonly permissionService = inject(PermissionService);
-
-    
     sidebarCollapsed = input<boolean>(false)
 
     readonly sections = computed<SidebarSection[]>(() =>

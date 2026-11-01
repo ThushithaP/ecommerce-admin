@@ -10,7 +10,6 @@ export abstract class BaseRoutedCrudPage<TRecord extends { id: any }, TFormValue
   protected readonly router = inject(Router);
   protected readonly route = inject(ActivatedRoute);
 
-  /** Override if your routes differ, e.g. 'staff/:id/edit' vs 'units/:id' */
   protected abstract readonly basePath: string;
 
   add(): void {

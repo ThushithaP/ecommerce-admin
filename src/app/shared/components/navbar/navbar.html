@@ -1,58 +1,108 @@
+
 <header class="app-navbar sticky top-0 z-50">
-    <div class="flex h-full items-center px-5">
+    <div class="app-navbar-content">
 
-        <p-button icon="pi pi-bars" [text]="true" [rounded]="true" (click)="onToggleSidebar()">
-        </p-button>
+        <!-- Left: Sidebar toggle + Brand -->
+        <div class="app-navbar-brand">
 
-        <div class="ml-3 flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl"
-                style="background:var(--color-primary);color:var(--color-primary-fg);">
+            <p-button
+                icon="pi pi-bars"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                styleClass="app-navbar-toggle"
+                ariaLabel="Toggle sidebar"
+                (click)="onToggleSidebar()">
+            </p-button>
 
-                <i class="pi pi-graduation-cap"></i>
+            <div class="app-brand">
+                <div class="app-brand-logo">
+                    <img src="/profile.png" alt="">
+                </div>
 
+                <span class="app-brand-name">
+                    VeeBazaa
+                </span>
             </div>
 
-            <span class="text-lg font-semibold">
-                ABC Fashion
-            </span>
         </div>
 
-        <div class="mx-8 flex-1">
-            <input pInputText placeholder="Search..." class="app-search w-full px-11 py-2" />
+        <!-- Center: Search -->
+        <div class="app-navbar-search-wrapper">
+
+            <i class="pi pi-search app-navbar-search-icon"></i>
+
+            <input
+                pInputText
+                placeholder="Search anything..."
+                class="app-navbar-search"
+                aria-label="Search application"
+            />
+
+            <kbd class="app-search-shortcut">Ctrl K</kbd>
+
         </div>
 
-        <div class="flex items-center gap-2">
+        <!-- Right: Actions + Profile -->
+        <div class="app-navbar-actions">
 
-            <p-button icon="pi pi-bell" [text]="true" [rounded]="true">
+            <p-button
+                icon="pi pi-bell"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                styleClass="app-navbar-action"
+                ariaLabel="Notifications">
             </p-button>
 
-            <p-button icon="pi pi-moon" [text]="true" [rounded]="true">
+            <p-button
+                icon="pi pi-moon"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                styleClass="app-navbar-action"
+                ariaLabel="Toggle theme">
             </p-button>
 
-            <p-button [text]="true" [rounded]="true" (click)="userMenu.toggle($event)">
+            <div class="app-navbar-divider"></div>
 
-                <div class="flex items-center gap-2">
-                    <!-- <p-avatar image="/avatar.jpg" shape="circle">
-                    </p-avatar> -->
+            <!-- User Profile -->
+            <p-button
+                [text]="true"
+                severity="secondary"
+                styleClass="app-navbar-profile"
+                (click)="userMenu.toggle($event)">
+
+                <div class="app-profile-content">
 
                     @if (currentUser(); as user) {
-                    <div class="hidden md:flex flex-col items-start leading-tight">
-                        <!-- <span class="font-medium">
-                            {{ user.name || 'Super User' }}
-                        </span>
 
-                        <small class="text-color-secondary">
-                            {{ user.role.name || 'Super User' }}
-                        </small> -->
-                    </div>
+                        <div class="app-profile-avatar">
+                            {{ (user.name || 'S').charAt(0).toUpperCase() }}
+                        </div>
+
+                        <div class="app-profile-info">
+                            <span class="app-profile-name">
+                                {{ user.name || 'Super User' }}
+                            </span>
+
+                            <span class="app-profile-role">
+                                {{ user.role || 'Super User' }}
+                            </span>
+                        </div>
+
                     }
 
-                    <i class="pi pi-angle-down"></i>
+                    <i class="pi pi-angle-down app-profile-chevron"></i>
+
                 </div>
 
             </p-button>
 
-            <p-menu #userMenu [popup]="true" [model]="userMenuItems">
+            <p-menu
+                #userMenu
+                [popup]="true"
+                [model]="userMenuItems">
             </p-menu>
 
         </div>

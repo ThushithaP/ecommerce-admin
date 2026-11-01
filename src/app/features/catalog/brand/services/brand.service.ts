@@ -54,7 +54,7 @@ export class BrandService implements CrudService<Brands, BrandFormValues> {
     );
   }
 
-  getById?(id: any): Observable<Brands> {
+  getById(id: number): Observable<Brands> {
     return this.http.get<Brands>(`${this.apiUrl}/${id}/`).pipe(
       catchError((err) => handleError(err))
     );

@@ -54,7 +54,7 @@ export class TaxClassService implements CrudService<TaxClasses, TaxClassFormValu
     );
   }
 
-  getById?(id: any): Observable<TaxClasses> {
+  getById(id: any): Observable<TaxClasses> {
     return this.http.get<TaxClasses>(`${this.apiUrl}/${id}/`).pipe(
       catchError((err) => handleError(err))
     );

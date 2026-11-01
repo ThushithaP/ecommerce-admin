@@ -25,9 +25,10 @@
         </app-form-field>
 
         <app-form-field for="taxClass" label="Tax Class" [error]="getError(f.taxClass)">
-      <p-select inputId="taxClass" formControlName="taxClass" [options]="taxClasses()" optionLabel="name" optionValue="id"
-        [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a tax class" class="w-full" (onFilter)="onTaxClsssFilter($event)"/>
-    </app-form-field>
+            <p-select inputId="taxClass" formControlName="taxClass" [options]="taxClasses()" optionLabel="name"
+                optionValue="id" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a tax class"
+                class="w-full" (onFilter)="onTaxClassFilter($event)" />
+        </app-form-field>
 
         <app-form-field for="status" label="Status" [required]="true" [error]="getError(f.status)">
             <p-select inputId="status" formControlName="status" [options]="statusOptions" optionLabel="name"
@@ -106,10 +107,19 @@
         <div [formGroup]="variant" class="px-3 py-3 border-b border-surface-100">
 
             <div class="grid grid-cols-6 gap-2 items-end">
-                <div class="col-span-1 text-sm text-surface-500">
-                    {{ variant.controls.attributes.value | json }}
+                <div class="col-span-1 text-sm text-surface-600">
+                    @for (attribute of variant.controls.attributes.value | keyvalue; track attribute.key) {
+                    <div class="flex gap-1">
+                        <span class="font-medium text-surface-700">
+                            {{ attribute.key | titlecase}}:
+                        </span>
+                        <span class="text-surface-500">
+                            {{ attribute.value }}
+                        </span>
+                    </div>
+                    }
                 </div>
-
+  
                 <app-form-field [for]="'sku-' + i" label="SKU" [required]="true"
                     [error]="getError(variant.controls.sku)">
                     <input pInputText class="w-full" formControlName="sku" />
@@ -151,8 +161,9 @@
     }
 
     <div class="flex justify-end gap-2 mt-6">
-        <p-button severity="secondary" [label]="mode() === 'view' ? 'Close' : 'Cancel'" type="button" (onClick)="onCancel()" />
-        @if(mode() !=='view'){<p-button raised severity="info" label="Save" type="submit"
-            [loading]="submitting()" [disabled]="form.invalid || submitting()" />}
+        <p-button severity="secondary" [label]="mode() === 'view' ? 'Close' : 'Cancel'" type="button"
+            (onClick)="onCancel()" />
+        @if(mode() !=='view'){<p-button raised severity="info" label="Save" type="submit" [loading]="submitting()"
+            [disabled]="form.invalid || submitting()" />}
     </div>
 </form>

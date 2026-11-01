@@ -1,55 +1,164 @@
 :root {
 
     /* ------------------------------------------------------------------
+       Primitive Colors
+    ------------------------------------------------------------------ */
+
+    /* Neutral / Slate */
+    --neutral-0: #ffffff;
+    --neutral-50: #f8fafc;
+    --neutral-100: #f1f5f9;
+    --neutral-200: #e2e8f0;
+    --neutral-300: #cbd5e1;
+    --neutral-400: #94a3b8;
+    --neutral-500: #64748b;
+    --neutral-600: #475569;
+    --neutral-700: #334155;
+    --neutral-800: #1e293b;
+    --neutral-900: #0f172a;
+    --neutral-950: #020617;
+
+
+    /* Indigo */
+    --brand-50: #eef2ff;
+    --brand-100: #e0e7ff;
+    --brand-200: #c7d2fe;
+    --brand-300: #a5b4fc;
+    --brand-400: #818cf8;
+    --brand-500: #6366f1;
+    --brand-600: #4f46e5;
+    --brand-700: #4338ca;
+    --brand-800: #3730a3;
+    --brand-900: #312e81;
+
+
+    /* Emerald */
+    --success-50: #ecfdf5;
+    --success-100: #d1fae5;
+    --success-500: #10b981;
+    --success-600: #059669;
+    --success-700: #047857;
+
+
+    /* Amber */
+    --warning-50: #fffbeb;
+    --warning-100: #fef3c7;
+    --warning-500: #f59e0b;
+    --warning-600: #d97706;
+    --warning-700: #b45309;
+
+
+    /* Rose */
+    --danger-50: #fff1f2;
+    --danger-100: #ffe4e6;
+    --danger-500: #f43f5e;
+    --danger-600: #e11d48;
+    --danger-700: #be123c;
+
+
+    /* Sky */
+    --info-50: #f0f9ff;
+    --info-100: #e0f2fe;
+    --info-500: #0ea5e9;
+    --info-600: #0284c7;
+    --info-700: #0369a1;
+
+
+    /* ------------------------------------------------------------------
        Semantic Colors
     ------------------------------------------------------------------ */
 
     --color-bg: var(--neutral-50);
-    --color-surface: white;
-    --color-surface-raised: white;
+
+    --color-surface: var(--neutral-0);
+    --color-surface-raised: var(--neutral-0);
     --color-surface-sunken: var(--neutral-100);
+
     --color-fg: var(--neutral-900);
     --color-fg-muted: var(--neutral-600);
     --color-fg-subtle: var(--neutral-500);
+
     --color-border: var(--neutral-200);
     --color-border-strong: var(--neutral-300);
+
     --color-primary: var(--brand-600);
     --color-primary-hover: var(--brand-700);
     --color-primary-subtle: var(--brand-50);
-    --color-primary-fg: white;
+    --color-primary-fg: var(--neutral-0);
+
     --color-success: var(--success-600);
     --color-warning: var(--warning-600);
     --color-danger: var(--danger-600);
     --color-info: var(--info-600);
-    --color-focus-ring: color-mix(in srgb, var(--brand-500) 40%, transparent);
+
+    --color-focus-ring:
+        color-mix(
+            in srgb,
+            var(--brand-500) 35%,
+            transparent
+        );
+
 
     /* ------------------------------------------------------------------
        Sidebar
     ------------------------------------------------------------------ */
 
-    --color-sidebar-bg: var(--p-primary-600);
-    --color-sidebar-bg-hover: var(--p-primary-700);
-    --color-sidebar-active-bg: var(--p-primary-700);
-    --color-sidebar-icon-active-bg: rgb(255 255 255 / 15%);
-    --color-sidebar-fg: white;
-    --color-sidebar-fg-muted: var(--p-primary-200);
-    --color-sidebar-fg-active: white;
-    --color-sidebar-border: color-mix(in srgb, var(--p-primary-700) 40%, transparent);
+    /*
+       Light sidebar instead of a fully saturated primary sidebar.
+       This keeps the navigation calm while primary colors remain
+       available for actions and active states.
+    */
 
-    /* Topbar */
 
-    --color-topbar-bg: var(--p-surface-0);
-    --color-topbar-border: var(--p-surface-200);
-    --color-topbar-fg: var(--p-surface-900);
+    /* Sidebar dimensions */
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 72px;
 
-    /* Status */
+    /* Sidebar colors */
+    --color-sidebar-bg: #ffffff;
+    --color-sidebar-fg: #1e293b;
+    --color-sidebar-fg-muted: #64748b;
+    --color-sidebar-fg-active: #1d4ed8;
 
-    --color-success: var(--p-green-600);
-    --color-warning: var(--p-orange-600);
-    --color-danger: var(--p-red-600);
-    --color-info: var(--p-cyan-600);
+    --color-sidebar-section: #94a3b8;
+    --color-sidebar-icon: #64748b;
 
-    --color-focus-ring: color-mix(in srgb, var(--p-primary-500) 40%, transparent);
+    --color-sidebar-border: #e2e8f0;
+
+    --color-sidebar-bg-hover: #f1f5f9;
+    --color-sidebar-active-bg: #eff6ff;
+    --color-sidebar-icon-active-bg: #dbeafe;
+
+
+    /* ------------------------------------------------------------------
+       Topbar
+    ------------------------------------------------------------------ */
+       --navbar-height: 64px;
+
+    --color-topbar-bg: #ffffff;
+    --color-topbar-fg: #1e293b;
+    --color-topbar-border: #e2e8f0;
+    /* --color-topbar-bg: var(--neutral-0);
+    --color-topbar-border: var(--neutral-200);
+    --color-topbar-fg: var(--neutral-900); */
+
+
+    /* ------------------------------------------------------------------
+       Status
+    ------------------------------------------------------------------ */
+
+    --color-success-bg: var(--success-50);
+    --color-success: var(--success-600);
+
+    --color-warning-bg: var(--warning-50);
+    --color-warning: var(--warning-600);
+
+    --color-danger-bg: var(--danger-50);
+    --color-danger: var(--danger-600);
+
+    --color-info-bg: var(--info-50);
+    --color-info: var(--info-600);
+
 
     /* ------------------------------------------------------------------
        Radius
@@ -58,28 +167,36 @@
     --radius-xs: 4px;
     --radius-sm: 6px;
     --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    --radius-lg: 10px;
+    --radius-xl: 14px;
+
 
     /* ------------------------------------------------------------------
        Shadows
     ------------------------------------------------------------------ */
 
-    --shadow-xs: 0 1px 2px rgb(15 23 42 /.04);
+    --shadow-xs:
+        0 1px 2px rgb(15 23 42 / 0.04);
+
     --shadow-sm:
-        0 1px 2px rgb(15 23 42 /.04),
-        0 1px 3px rgb(15 23 42 /.06);
+        0 1px 2px rgb(15 23 42 / 0.04),
+        0 1px 3px rgb(15 23 42 / 0.06);
 
     --shadow-md:
-        0 4px 6px -1px rgb(15 23 42 /.08),
-        0 2px 4px -2px rgb(15 23 42 /.06);
+        0 4px 6px -1px rgb(15 23 42 / 0.08),
+        0 2px 4px -2px rgb(15 23 42 / 0.06);
+
 
     /* ------------------------------------------------------------------
        Layout
     ------------------------------------------------------------------ */
-    --navbar-height: 64px;
-    --sidebar-width: 288px;
-    --sidebar-collapsed-width: 72px;
-    --transition-fast: 200ms cubic-bezier(.2,0,0,1);
 
+    --navbar-height: 64px;
+
+    --sidebar-width: 288px;
+
+    --sidebar-collapsed-width: 72px;
+
+    --transition-fast:
+        200ms cubic-bezier(.2, 0, 0, 1);
 }
