@@ -1,59 +1,98 @@
 <div class="hidden lg:flex bg-(--color-primary) text-white relative overflow-hidden w-full h-full">
-    <div class="absolute inset-0 opacity-10">
+
+    <!-- Background decoration -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
         <div class="absolute w-162.5 h-162.5 rounded-full bg-white -top-52 -left-40"></div>
         <div class="absolute w-112.5 h-112.5 rounded-full bg-white -bottom-37.5 -right-25"></div>
     </div>
 
-    <div class="relative z-10 flex flex-col justify-center px-20">
+    <div class="relative z-10 flex flex-col justify-center px-12 xl:px-20 py-12">
 
-        <h1 class="text-5xl font-bold mb-6">
-            Join Lumen LMS
+        <!-- Brand -->
+        <div class="flex items-center gap-3 mb-12">
+            <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-white/15">
+                <i class="pi pi-shop text-2xl"></i>
+            </div>
+
+            <span class="text-2xl font-bold tracking-tight">
+                VeeBazaa
+            </span>
+        </div>
+
+        <!-- Main heading -->
+        <h1 class="text-4xl xl:text-5xl font-bold leading-tight mb-6">
+            Manage Your Business
+            <span class="text-white/80">Smarter.</span>
         </h1>
 
-        <p class="text-xl leading-9 opacity-90 max-w-lg">
-            Learn new skills, track your progress, earn certificates and grow your career.
+        <p class="text-lg xl:text-xl leading-8 opacity-90 max-w-lg">
+            Everything you need to manage your e-commerce business
+            in one place. Stay in control of your orders, inventory,
+            customers, and sales.
         </p>
 
-        <div class="mt-16 space-y-8">
+        <!-- Features -->
+        <div class="mt-14 space-y-8">
 
-            <div class="flex gap-4">
-                <i class="pi pi-graduation-cap text-2xl"></i>
-
-                <div>
-                    <h3 class="font-semibold text-lg">Expert Courses</h3>
-                    <p class="opacity-80">
-                        Learn from experienced instructors.
-                    </p>
+            <div class="flex items-start gap-4">
+                <div class="flex items-center justify-center w-11 h-11 rounded-xl bg-white/15 shrink-0">
+                    <i class="pi pi-shopping-bag text-xl"></i>
                 </div>
 
+                <div>
+                    <h3 class="font-semibold text-lg">
+                        Order Management
+                    </h3>
+
+                    <p class="text-sm leading-6 opacity-80 mt-1">
+                        Manage orders, track fulfillment, and monitor
+                        payment statuses.
+                    </p>
+                </div>
             </div>
 
-            <div class="flex gap-4">
-                <i class="pi pi-chart-bar text-2xl"></i>
-
-                <div>
-                    <h3 class="font-semibold text-lg">Track Progress</h3>
-                    <p class="opacity-80">
-                        Monitor your learning journey.
-                    </p>
+            <div class="flex items-start gap-4">
+                <div class="flex items-center justify-center w-11 h-11 rounded-xl bg-white/15 shrink-0">
+                    <i class="pi pi-box text-xl"></i>
                 </div>
 
+                <div>
+                    <h3 class="font-semibold text-lg">
+                        Inventory Control
+                    </h3>
+
+                    <p class="text-sm leading-6 opacity-80 mt-1">
+                        Organize products, manage stock levels, and
+                        keep inventory up to date.
+                    </p>
+                </div>
             </div>
 
-            <div class="flex gap-4">
-                <i class="pi pi-verified text-2xl"></i>
-
-                <div>
-                    <h3 class="font-semibold text-lg">Earn Certificates</h3>
-                    <p class="opacity-80">
-                        Showcase your achievements.
-                    </p>
+            <div class="flex items-start gap-4">
+                <div class="flex items-center justify-center w-11 h-11 rounded-xl bg-white/15 shrink-0">
+                    <i class="pi pi-chart-line text-xl"></i>
                 </div>
 
+                <div>
+                    <h3 class="font-semibold text-lg">
+                        Business Analytics
+                    </h3>
+
+                    <p class="text-sm leading-6 opacity-80 mt-1">
+                        Understand sales performance and make
+                        informed business decisions.
+                    </p>
+                </div>
             </div>
 
         </div>
 
-    </div>
+        <!-- Footer -->
+        <div class="mt-16 pt-6 border-t border-white/20">
+            <p class="text-sm opacity-70">
+                One platform. Complete business control.
+            </p>
+        </div>
 
+    </div>
 </div>
